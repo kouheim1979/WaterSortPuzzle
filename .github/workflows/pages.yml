@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -23,6 +23,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Repair stage generator if needed
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+          broken = "steps.push({fi:pick.fi,ti:pick.count});prev=pick;"
+          fixed = "steps.push({fi:pick.fi,ti:pick.ti,count:pick.count});prev=pick;"
+          if broken in text:
+              path.write_text(text.replace(broken, fixed, 1), encoding="utf-8")
+              print("Repaired StageManager reverse-move history recording.")
+          else:
+              print("StageManager source is already repaired.")
+
+      - name: Persist repair to main
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No source repair to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Fix stage generator move history"
+            git push origin HEAD:main
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
