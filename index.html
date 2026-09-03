@@ -392,7 +392,7 @@ class StageManager{
         if(!opts.length)break;opts.sort((a,z)=>z.score-a.score);const pick=opts[rng.int(Math.min(5,opts.length))];b=pick.nb;seen.add(pick.key);steps.push({fi:pick.fi,ti:pick.ti,count:pick.count});prev=pick;
         if(b.filter(x=>!x.length).length===cfg.empty&&!this.solved(b)&&this.mixed(b)>=cfg.minMixed){
           const solution=[...steps].reverse().map(m=>({from:m.ti,to:m.fi,count:m.count}));const candidate={difficulty:diff,bottles:b.map(x=>[...x]),solution};
-          const v=this.validate(candidate);if(v.ok){const spread=K.COLORS.slice(0,cfg.colors).reduce((n,c)=>n+b.filter(x=>x.includes(c)).length,0),score=this.mixed(b)*20+spread*2+Math.min(steps.length,cfg.target);if(!best||score>best.score)best={...candidate,score}
+          const v=this.validate(candidate);if(v.ok){const spread=K.COLORS.slice(0,cfg.colors).reduce((n,c)=>n+b.filter(x=>x.includes(c)).length,0),score=this.mixed(b)*20+spread*2+Math.min(steps.length,cfg.target);if(!best||score>best.score)best={...candidate,score}}
         }
       }
     }
