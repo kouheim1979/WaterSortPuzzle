@@ -3,101 +3,104 @@ name: Deploy Water Sort Puzzle to GitHub Pages
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
-  group: "pages"
+  group: pages-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Extract inline JavaScript and syntax check
+        run: node .github/scripts/validate.cjs --syntax-only
+
+      - name: Fixed stages and game regression tests
+        run: node .github/scripts/validate.cjs
+
+      - name: Prepare verified static site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          mkdir -p _site
+          cp index.html _site/index.html
+          cmp index.html _site/index.html
+
+      - name: Upload verified static site
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
   deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: validate
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Checkout
+      - name: Checkout exact source for published verification
         uses: actions/checkout@v4
 
-      - name: Repair known source issues
-        shell: python
-        run: |
-          from pathlib import Path
-
-          path = Path("index.html")
-          text = path.read_text(encoding="utf-8")
-          original = text
-
-          broken_history = "steps.push({fi:pick.fi,ti:pick.count});prev=pick;"
-          fixed_history = "steps.push({fi:pick.fi,ti:pick.ti,count:pick.count});prev=pick;"
-          text = text.replace(broken_history, fixed_history, 1)
-
-          broken_brace = "if(!best||score>best.score)best={...candidate,score}\n        }\n      }\n    }\n    return best"
-          fixed_brace = "if(!best||score>best.score)best={...candidate,score}}\n        }\n      }\n    }\n    return best"
-          text = text.replace(broken_brace, fixed_brace, 1)
-
-          if text != original:
-              path.write_text(text, encoding="utf-8")
-              print("Repaired known StageManager source issues.")
-          else:
-              print("No known source repair was required.")
-
-      - name: Extract inline JavaScript
-        shell: python
-        run: |
-          from pathlib import Path
-          html = Path("index.html").read_text(encoding="utf-8")
-          start = html.index("<script>") + len("<script>")
-          end = html.index("</script>", start)
-          Path("/tmp/app.js").write_text(html[start:end], encoding="utf-8")
-
-      - name: JavaScript syntax check
-        shell: bash
-        run: node --check /tmp/app.js
-
-      - name: Validate all fixed stages
-        shell: python
-        run: |
-          from pathlib import Path
-          js = Path("/tmp/app.js").read_text(encoding="utf-8")
-          boot = "document.addEventListener('DOMContentLoaded',()=>new App().init(),{once:true});"
-          smoke = "if(!StageManager.validateAllFixedStages())throw new Error('Fixed-stage validation failed');"
-          if boot not in js:
-              raise SystemExit("Boot marker not found")
-          Path("/tmp/stage-smoke.js").write_text(js.replace(boot, smoke, 1), encoding="utf-8")
-
-      - name: Run fixed-stage smoke test
-        shell: bash
-        run: node /tmp/stage-smoke.js
-
-      - name: Persist source repair to main
-        shell: bash
-        run: |
-          if git diff --quiet -- index.html; then
-            echo "No source repair to commit."
-          else
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add index.html
-            git commit -m "Fix JavaScript syntax and stage generation"
-            git push origin HEAD:main
-          fi
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
           enablement: true
 
-      - name: Upload static site
-        uses: actions/upload-pages-artifact@v4
-        with:
-          path: '.'
+      - name: Require the validated Actions publishing path
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          build_type=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')
+          if [ "$build_type" != "workflow" ]; then
+            gh api --method PUT "repos/$GITHUB_REPOSITORY/pages" -f build_type=workflow > /dev/null
+          fi
+          test "$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')" = "workflow"
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy verified artifact to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify the published HTML matches this commit
+        env:
+          PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          for attempt in $(seq 1 12); do
+            if curl --fail --location --silent --show-error --max-time 20 \
+              -H 'Cache-Control: no-cache' \
+              "${PAGE_URL}?verify=${GITHUB_SHA}-${GITHUB_RUN_ID}-${attempt}" \
+              -o /tmp/published.html && cmp --silent index.html /tmp/published.html; then
+              sha256sum index.html /tmp/published.html
+              node .github/scripts/validate.cjs /tmp/published.html
+              exit 0
+            fi
+            echo "Waiting for the published HTML to match commit ${GITHUB_SHA} (attempt ${attempt}/12)."
+            sleep 10
+          done
+          echo 'Published HTML does not match the validated source.' >&2
+          exit 1

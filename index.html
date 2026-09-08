@@ -25,7 +25,7 @@ body{
   -webkit-tap-highlight-color:transparent;
 }
 button{font:inherit}
-#scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:
+#scene{position:fixed;inset:0;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,var(--bg0),var(--bg1) 56%,var(--bg2));background:
   radial-gradient(ellipse 92% 68% at 18% -8%,color-mix(in srgb,var(--accent) 42%,transparent),transparent 62%),
   radial-gradient(ellipse 85% 65% at 92% 105%,color-mix(in srgb,var(--accent2) 35%,transparent),transparent 62%),
   linear-gradient(180deg,var(--bg0),var(--bg1) 56%,var(--bg2))}
@@ -40,11 +40,11 @@ button{font:inherit}
 .star{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:#dceaff;box-shadow:0 0 8px rgba(190,220,255,.5);animation:twinkle var(--t) ease-in-out infinite;animation-delay:var(--d)}
 @keyframes twinkle{0%,100%{opacity:.08;transform:scale(.8)}50%{opacity:.72;transform:scale(1.18)}}
 
-#app{position:relative;z-index:2;width:100%;height:100dvh;max-width:520px;margin:0 auto;display:flex;flex-direction:column}
+#app{position:relative;z-index:2;width:100%;height:100vh;height:100dvh;max-width:520px;margin:0 auto;display:flex;flex-direction:column}
 #header{
   flex:none;display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;
-  padding:10px 12px 9px;border-bottom:1px solid var(--line);
-  background:linear-gradient(180deg,color-mix(in srgb,var(--panelStrong) 94%,transparent),var(--panel));
+  padding:calc(10px + env(safe-area-inset-top,0px)) 12px 9px;border-bottom:1px solid var(--line);
+  background:var(--panel);background:linear-gradient(180deg,color-mix(in srgb,var(--panelStrong) 94%,transparent),var(--panel));
   backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2);
   box-shadow:0 12px 32px rgba(0,0,0,.15)
 }
@@ -74,13 +74,13 @@ button{font:inherit}
 
 #game{
   flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;
-  display:flex;align-items:center;justify-content:center;padding:12px 8px 14px
+  display:flex;align-items:flex-start;justify-content:center;padding:12px 8px 14px
 }
 #game.stage-enter{animation:stageEnter .42s cubic-bezier(.2,.8,.2,1) both}
 @keyframes stageEnter{from{opacity:0;transform:translateY(10px) scale(.98);filter:blur(3px)}to{opacity:1;transform:none;filter:none}}
 #grid{
   width:100%;display:grid;grid-template-columns:repeat(var(--cols,3),var(--bw));
-  justify-content:center;align-items:end;gap:var(--gap);padding:8px 4px 2px
+  justify-content:center;align-items:end;gap:var(--gap);padding:8px 4px 2px;margin:auto 0
 }
 #grid.compact{--bh:136px;--bw:54px;--gap:9px}
 #grid.dense{--bh:124px;--bw:50px;--gap:8px}
@@ -170,7 +170,7 @@ button{font:inherit}
 #footer{
   flex:none;display:grid;grid-template-columns:repeat(4,1fr);gap:7px;
   padding:9px 10px calc(9px + var(--safe));border-top:1px solid var(--line);
-  background:linear-gradient(0deg,color-mix(in srgb,var(--panelStrong) 96%,transparent),var(--panel));
+  background:var(--panel);background:linear-gradient(0deg,color-mix(in srgb,var(--panelStrong) 96%,transparent),var(--panel));
   backdrop-filter:blur(24px) saturate(1.2);-webkit-backdrop-filter:blur(24px) saturate(1.2)
 }
 .action{
@@ -193,7 +193,7 @@ button{font:inherit}
 }
 .modalBack.hidden{display:none}
 .card{
-  width:min(350px,100%);border-radius:27px;padding:24px 20px;
+  width:min(350px,100%);max-height:100%;overflow:auto;border-radius:27px;padding:24px 20px;
   background:linear-gradient(180deg,rgba(18,24,61,.97),rgba(7,11,32,.98));
   border:1px solid rgba(190,210,255,.20);box-shadow:0 28px 80px rgba(0,0,0,.46),inset 0 1px rgba(255,255,255,.06);
   animation:modalIn .34s cubic-bezier(.2,.9,.2,1.1) both
@@ -205,7 +205,7 @@ button{font:inherit}
 #rewardText{font-size:18px;font-weight:900;color:var(--gold)}#totalText{margin:6px 0 20px;color:var(--sub);font-size:12px}
 .primary{
   width:100%;padding:14px 16px;border:0;border-radius:15px;color:white;font-weight:900;font-size:15px;cursor:pointer;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 28px color-mix(in srgb,var(--accent) 30%,transparent)
+  background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 28px rgba(140,121,255,.3);box-shadow:0 10px 28px color-mix(in srgb,var(--accent) 30%,transparent)
 }
 .settingsTitle{text-align:center;font-size:18px;font-weight:900;margin-bottom:13px}
 .settingRow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.065)}
@@ -214,7 +214,7 @@ button{font:inherit}
   border:1px solid rgba(255,255,255,.14);border-radius:10px;background:rgba(255,255,255,.055);color:var(--sub);
   padding:6px 10px;font-size:10px;font-weight:800;cursor:pointer
 }
-.toggle.on,.choice.on{background:color-mix(in srgb,var(--accent) 32%,transparent);border-color:color-mix(in srgb,var(--accent) 58%,transparent);color:#fff}
+.toggle.on,.choice.on{background:rgba(140,121,255,.32);border-color:var(--accent);background:color-mix(in srgb,var(--accent) 32%,transparent);border-color:color-mix(in srgb,var(--accent) 58%,transparent);color:#fff}
 .choiceGroup{display:flex;gap:4px}.settingsActions{display:grid;gap:7px;margin-top:16px}.ghost{padding:11px;width:100%;color:var(--text)}.ghost.danger{color:#ffacba;border-color:rgba(255,100,130,.26);background:rgba(255,70,100,.055)}
 
 #toast{
@@ -323,8 +323,8 @@ class StorageManager{
 
 class SettingsManager{
   constructor(storage){this.storage=storage;this.defaults={sound:true,vibration:true,theme:'Purple',speed:'Normal'};this.values=this.#validated(storage.loadSettings());this.apply()}
-  #validated(v){const x={...this.defaults,...(v&&typeof v==='object'?v:{})};if(!['Purple','Blue','Dark'].includes(x.theme))x.theme='Purple';if(!Object.hasOwn(K.SPEED,x.speed))x.speed='Normal';x.sound=Boolean(x.sound);x.vibration=Boolean(x.vibration);return x}
-  set(k,v){if(!Object.hasOwn(this.defaults,k))return;this.values[k]=v;this.values=this.#validated(this.values);this.storage.saveSettings(this.values);this.apply()}
+  #validated(v){const x={...this.defaults,...(v&&typeof v==='object'&&!Array.isArray(v)?v:{})};if(!['Purple','Blue','Dark'].includes(x.theme))x.theme='Purple';if(!Object.prototype.hasOwnProperty.call(K.SPEED,x.speed))x.speed='Normal';if(typeof x.sound!=='boolean')x.sound=true;if(typeof x.vibration!=='boolean')x.vibration=true;return x}
+  set(k,v){if(!Object.prototype.hasOwnProperty.call(this.defaults,k))return;this.values[k]=v;this.values=this.#validated(this.values);this.storage.saveSettings(this.values);this.apply()}
   reset(){this.values={...this.defaults};this.storage.saveSettings(this.values);this.apply()}
   apply(){document.body.dataset.theme=this.values.theme;document.documentElement.style.setProperty('--dur',`${K.SPEED[this.values.speed]}ms`)}
   get ms(){return K.SPEED[this.values.speed]||300}
@@ -334,7 +334,7 @@ class SoundManager{
   constructor(settings){this.settings=settings;this.ctx=null}
   #init(){if(this.ctx)return;try{const A=window.AudioContext||window.webkitAudioContext;if(A)this.ctx=new A()}catch{}}
   #tone(freq,d=.09,type='sine',volume=.09,delay=0){if(!this.ctx)return;try{const now=this.ctx.currentTime+delay,o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(freq,now);g.gain.setValueAtTime(volume,now);g.gain.exponentialRampToValueAtTime(.001,now+d);o.connect(g);g.connect(this.ctx.destination);o.start(now);o.stop(now+d)}catch{}}
-  play(type){if(!this.settings.values.sound)return;this.#init();if(!this.ctx)return;try{if(this.ctx.state==='suspended')this.ctx.resume()}catch{}
+  play(type){if(!this.settings.values.sound)return;this.#init();if(!this.ctx)return;try{if(this.ctx.state==='suspended')this.ctx.resume().catch(()=>{})}catch{}
     if(type==='select')this.#tone(610,.07,'sine',.07);
     else if(type==='pour'){this.#tone(390,.11,'triangle',.10);this.#tone(510,.11,'triangle',.07,.065)}
     else if(type==='fail')this.#tone(155,.16,'square',.06);
@@ -356,6 +356,7 @@ class StageManager{
   static moveArray(b,f,t){if(!this.canMove(b,f,t))return 0;const n=Math.min(this.run(b[f]),K.CAP-b[t].length);b[t].push(...b[f].splice(b[f].length-n,n));return n}
   static validate(stage){
     try{
+      if(!stage||!Object.prototype.hasOwnProperty.call(K.DIFF,stage.difficulty))return{ok:false,reason:'difficulty'};
       const d=stage.difficulty,cfg=this.config(d),b=stage.bottles;
       if(!Array.isArray(b)||b.length!==cfg.colors+cfg.empty)return{ok:false,reason:'bottle count'};
       if(b.filter(x=>Array.isArray(x)&&x.length===0).length!==cfg.empty)return{ok:false,reason:'empty count'};
@@ -363,7 +364,8 @@ class StageManager{
       for(const x of b){if(!Array.isArray(x)||x.length>K.CAP)return{ok:false,reason:'capacity'};for(const c of x){if(!allowed.includes(c))return{ok:false,reason:'color'};counts[c]++}}
       if(allowed.some(c=>counts[c]!==K.CAP))return{ok:false,reason:'color count'};
       if(this.solved(b))return{ok:false,reason:'already solved'};
-      if(Array.isArray(stage.solution)){const cur=b.map(x=>[...x]);for(const m of stage.solution){if(!this.canMove(cur,m.from,m.to))return{ok:false,reason:'solution illegal'};const n=this.moveArray(cur,m.from,m.to);if(n!==m.count)return{ok:false,reason:'solution count'}}if(!this.solved(cur))return{ok:false,reason:'solution incomplete'}}
+      if(!Array.isArray(stage.solution)||!stage.solution.length)return{ok:false,reason:'solution missing'};
+      const cur=b.map(x=>[...x]);for(const m of stage.solution){if(!m||!Number.isInteger(m.from)||!Number.isInteger(m.to)||!Number.isInteger(m.count)||!this.canMove(cur,m.from,m.to))return{ok:false,reason:'solution illegal'};const n=this.moveArray(cur,m.from,m.to);if(n!==m.count)return{ok:false,reason:'solution count'}}if(!this.solved(cur))return{ok:false,reason:'solution incomplete'};
       return{ok:true}
     }catch(e){return{ok:false,reason:String(e)}}
   }
@@ -427,37 +429,61 @@ class GameState{
     this.extraCount=options.extraCount||0;this.history=[];this.selected=null;this.stageCleared=Boolean(options.stageCleared);
     this.completedStages=new Set(Array.isArray(options.completedStages)?options.completedStages:[]);this.campaignBonusClaimed=Boolean(options.campaignBonusClaimed);this.lastMove=null
   }
-  snapshot(){return{bottles:this.bottles.map(b=>b.toJSON()),coins:this.coins,extraCount:this.extraCount,stageCleared:this.stageCleared}}
-  pushHistory(){this.history.push(structuredClone(this.snapshot()));if(this.history.length>150)this.history.shift()}
-  restore(s){this.bottles=s.bottles.map(x=>new Bottle(x));this.coins=s.coins;this.extraCount=s.extraCount;this.stageCleared=Boolean(s.stageCleared);this.selected=null}
-  undo(){const s=this.history.pop();if(!s)return false;this.restore(s);this.lastMove=null;return true}
+  snapshot(){return{bottles:this.bottles.map(b=>b.toJSON()),coins:this.coins,extraCount:this.extraCount,stageCleared:this.stageCleared,completedStages:[...this.completedStages],campaignBonusClaimed:this.campaignBonusClaimed,lastMove:this.lastMove?{...this.lastMove}:null}}
+  pushHistory(){this.history.push(this.snapshot());if(this.history.length>150)this.history.shift()}
+  restore(s){this.bottles=s.bottles.map(x=>new Bottle(x));this.coins=s.coins;this.extraCount=s.extraCount;this.stageCleared=Boolean(s.stageCleared);this.completedStages=new Set(s.completedStages);this.campaignBonusClaimed=s.campaignBonusClaimed;this.lastMove=s.lastMove?{...s.lastMove}:null;this.selected=null}
+  undo(){const s=this.history.pop();if(!s)return false;this.restore(s);return true}
   restart(){this.bottles=this.initialBottles.map(b=>b.clone());this.extraCount=0;this.history=[];this.selected=null;this.stageCleared=false;this.lastMove=null}
   canMove(f,t){return f!==t&&this.bottles[f]&&this.bottles[t]&&this.bottles[f].canPourTo(this.bottles[t])}
   move(f,t){if(!this.canMove(f,t))return false;this.pushHistory();const source=this.bottles[f],target=this.bottles[t],n=Math.min(source.run,target.free);target.give(source.take(n));this.selected=null;this.lastMove={from:f,to:t};return true}
   addExtra(){if(this.extraCount>=K.MAX_EXTRA)return{ok:false,msg:'追加ビンは最大3本です'};if(this.coins<K.EXTRA_COST)return{ok:false,msg:'コインが足りません'};this.pushHistory();this.coins-=K.EXTRA_COST;this.bottles.push(new Bottle());this.extraCount++;this.selected=null;return{ok:true}}
   useHint(){if(this.coins<K.HINT_COST)return false;this.pushHistory();this.coins-=K.HINT_COST;this.selected=null;return true}
   get clear(){return this.bottles.length>0&&this.bottles.every(b=>b.complete)}
+  claimClear(){
+    if(!this.clear||this.stageCleared)return null;
+    this.stageCleared=true;let reward=0;
+    if(!this.completedStages.has(this.level)){
+      this.completedStages.add(this.level);reward=K.CLEAR_REWARD;
+      if(this.level===20&&!this.campaignBonusClaimed){this.campaignBonusClaimed=true;reward+=K.CAMPAIGN_BONUS}
+    }
+    this.coins+=reward;return reward
+  }
   toJSON(){return{version:K.SAVE_VERSION,level:this.level,difficulty:this.difficulty,coins:this.coins,bottles:this.bottles.map(b=>b.toJSON()),initialBottles:this.initialBottles.map(b=>b.toJSON()),extraCount:this.extraCount,completedStages:[...this.completedStages],campaignBonusClaimed:this.campaignBonusClaimed,stageCleared:this.stageCleared}}
   static fromSaved(d){
-    if(!d||![2,K.SAVE_VERSION].includes(d.version)||!Number.isInteger(d.level)||d.level<1||!Number.isFinite(d.coins)||d.coins<0||!Array.isArray(d.bottles))throw new Error('invalid save');
+    if(!d||![2,K.SAVE_VERSION].includes(d.version)||!Number.isSafeInteger(d.level)||d.level<1||d.level>1000000||!Number.isSafeInteger(d.coins)||d.coins<0||!Array.isArray(d.bottles))throw new Error('invalid save');
     const legacy=d.version===2,initial=legacy?d.initial:d.initialBottles;if(!Array.isArray(initial))throw new Error('invalid initial board');
     const diff=['easy','normal','hard','expert'].includes(d.difficulty)?d.difficulty:StageManager.difficulty(d.level),cfg=StageManager.config(diff),allowed=K.COLORS.slice(0,cfg.colors);
-    const validCurrent=a=>Array.isArray(a)&&a.length>=cfg.colors+cfg.empty&&a.length<=cfg.colors+cfg.empty+K.MAX_EXTRA&&a.every(x=>Array.isArray(x)&&x.length<=K.CAP&&x.every(c=>allowed.includes(c)));
-    const validInitial=a=>Array.isArray(a)&&a.length===cfg.colors+cfg.empty&&a.every(x=>Array.isArray(x)&&x.length<=K.CAP&&x.every(c=>allowed.includes(c)));
-    if(!validCurrent(d.bottles)||!validInitial(initial))throw new Error('invalid board');
+    if(diff!==StageManager.difficulty(d.level)||(d.difficulty!==undefined&&d.difficulty!==diff))throw new Error('invalid difficulty');
+    const extra=d.extraCount===undefined?d.bottles.length-cfg.colors-cfg.empty:d.extraCount;
+    if(!Number.isInteger(extra)||extra<0||extra>K.MAX_EXTRA)throw new Error('invalid extra bottle count');
+    const validBoard=(a,count)=>{
+      if(!Array.isArray(a)||a.length!==count)return false;
+      const counts=Object.fromEntries(allowed.map(c=>[c,0]));
+      for(const bottle of a){if(!Array.isArray(bottle)||bottle.length>K.CAP)return false;for(const color of bottle){if(!allowed.includes(color))return false;counts[color]++}}
+      return allowed.every(c=>counts[c]===K.CAP)
+    };
+    if(!validBoard(d.bottles,cfg.colors+cfg.empty+extra)||!validBoard(initial,cfg.colors+cfg.empty)||initial.filter(x=>!x.length).length!==cfg.empty||StageManager.solved(initial))throw new Error('invalid board');
     const completed=legacy?Array.from({length:Math.max(0,d.level-1)},(_,i)=>i+1):(Array.isArray(d.completedStages)?d.completedStages:[]);
-    return new GameState({level:d.level,difficulty:diff,bottles:d.bottles,initialBottles:initial},{coins:Math.floor(d.coins),extraCount:Math.max(0,Math.min(K.MAX_EXTRA,d.extraCount||0)),completedStages:completed,campaignBonusClaimed:d.campaignBonusClaimed,stageCleared:legacy?Boolean(d.rewardGranted):Boolean(d.stageCleared)});
+    if(completed.some(n=>!Number.isSafeInteger(n)||n<1||n>d.level))throw new Error('invalid completed stages');
+    if(!legacy&&d.stageCleared!==undefined&&typeof d.stageCleared!=='boolean')throw new Error('invalid clear flag');
+    if(d.campaignBonusClaimed!==undefined&&typeof d.campaignBonusClaimed!=='boolean')throw new Error('invalid bonus flag');
+    const stageCleared=legacy?Boolean(d.rewardGranted):Boolean(d.stageCleared);
+    if(stageCleared&&!StageManager.solved(d.bottles))throw new Error('invalid cleared board');
+    if(stageCleared&&!completed.includes(d.level))completed.push(d.level);
+    const campaignBonusClaimed=Boolean(d.campaignBonusClaimed)||completed.includes(20);
+    return new GameState({level:d.level,difficulty:diff,bottles:d.bottles,initialBottles:initial},{coins:d.coins,extraCount:extra,completedStages:completed,campaignBonusClaimed,stageCleared});
   }
 }
 
 class HintManager{
   find(g){
-    let best=null,bestScore=-Infinity;
+    let best=null,bestScore=-Infinity;const board=g.bottles.map(b=>b.toJSON()),visited=new Set(g.history.map(s=>StageManager.key(s.bottles)));
     for(let f=0;f<g.bottles.length;f++){
       const s=g.bottles[f];if(s.empty||(!s.empty&&s.complete))continue;
       for(let t=0;t<g.bottles.length;t++){
         if(f===t)continue;const d=g.bottles[t];if(!s.canPourTo(d))continue;
         const n=Math.min(s.run,d.free);if(!n)continue;if(d.empty&&s.run===s.length)continue;
+        const next=board.map(b=>[...b]);StageManager.moveArray(next,f,t);if(visited.has(StageManager.key(next)))continue;
         let score=0;if(d.length+n===K.CAP)score+=100;if(!d.empty)score+=35+n*4;if(s.length-n===0)score+=22;if(s.length>n&&s._s[s.length-n-1]!==s.top)score+=16;if(d.empty)score+=4;
         if(g.lastMove&&g.lastMove.from===t&&g.lastMove.to===f)score-=80;
         if(score>bestScore){bestScore=score;best={from:f,to:t}}
@@ -497,7 +523,7 @@ class Renderer{
     document.getElementById('stageTitle').textContent=`Stage ${g.level}`;const d=document.getElementById('difficulty');d.textContent=StageManager.label(g.difficulty);d.className=g.difficulty;
     document.getElementById('coinValue').textContent=g.coins;const grid=document.getElementById('grid'),n=g.bottles.length,cols=n<=6?3:4;grid.style.setProperty('--cols',cols);grid.className=n>=12?'dense':n>=9?'compact':'';
     grid.innerHTML='';g.bottles.forEach((b,i)=>grid.appendChild(this.#bottle(b,i,g.selected===i)));
-    document.getElementById('undoBtn').disabled=!g.history.length;document.getElementById('hintBtn').disabled=g.coins<K.HINT_COST;document.getElementById('extraBtn').disabled=g.coins<K.EXTRA_COST||g.extraCount>=K.MAX_EXTRA
+    document.getElementById('undoBtn').disabled=!g.history.length;document.getElementById('hintBtn').disabled=g.stageCleared||g.coins<K.HINT_COST;document.getElementById('extraBtn').disabled=g.stageCleared||g.coins<K.EXTRA_COST||g.extraCount>=K.MAX_EXTRA
   }
   #bottle(b,i,selected){
     const btn=document.createElement('button');btn.type='button';btn.className='bottle'+(selected?' selected':'')+(b.complete&&!b.empty?' done':'');btn.dataset.i=i;btn.setAttribute('aria-label',`ビン ${i+1}`);
@@ -519,11 +545,12 @@ class Renderer{
 }
 
 class App{
-  constructor(){this.storage=new StorageManager();this.settings=new SettingsManager(this.storage);this.sound=new SoundManager(this.settings);this.anim=new AnimationManager(this.settings);this.renderer=new Renderer(this.settings);this.hints=new HintManager();this.state=null;this.busy=false}
+  constructor(){this.storage=new StorageManager();this.settings=new SettingsManager(this.storage);this.sound=new SoundManager(this.settings);this.anim=new AnimationManager(this.settings);this.renderer=new Renderer(this.settings);this.hints=new HintManager();this.state=null;this.busy=false;this.clearTimer=null}
   init(){
     this.makeStars();const saved=this.storage.load();try{this.state=saved?GameState.fromSaved(saved):null}catch(e){console.warn('Invalid save discarded',e);this.state=null}
     if(!this.state){const st=new StageManager().load(1);this.state=new GameState(st)}
-    this.bind();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter()
+    this.bind();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save();
+    if(this.state.stageCleared)this.renderer.showClear(0,this.state.coins);else this.checkWin()
   }
   makeStars(){const e=document.getElementById('stars');e.innerHTML='';for(let i=0;i<55;i++){const s=document.createElement('i');s.className='star';s.style.left=`${Math.random()*100}%`;s.style.top=`${Math.random()*100}%`;s.style.setProperty('--s',`${.7+Math.random()*1.9}px`);s.style.setProperty('--t',`${3+Math.random()*6}s`);s.style.setProperty('--d',`${Math.random()*-6}s`);e.appendChild(s)}}
   bind(){
@@ -536,27 +563,29 @@ class App{
     document.getElementById('settingsModal').addEventListener('click',e=>{if(e.target.id==='settingsModal')this.closeSettings()})
   }
   save(){this.storage.save(this.state)}
+  cancelClear(){clearTimeout(this.clearTimer);this.clearTimer=null;this.renderer.hideClear();this.renderer.clearHint()}
   async tap(i){
-    if(this.busy||!this.state.bottles[i])return;this.renderer.clearHint();
+    if(this.busy||this.state.stageCleared||!this.state.bottles[i])return;this.renderer.clearHint();
     if(this.state.selected===null){if(this.state.bottles[i].empty){this.sound.play('fail');await this.anim.shake(this.renderer.el(i));return}this.state.selected=i;this.sound.play('select');this.sound.vibrate(12);this.renderer.render(this.state);return}
     const from=this.state.selected;if(from===i){this.state.selected=null;this.sound.play('select');this.renderer.render(this.state);return}
     if(!this.state.canMove(from,i)){this.sound.play('fail');this.sound.vibrate([28,18,28]);await this.anim.shake(this.renderer.el(i));return}
-    const fromEl=this.renderer.el(from),toEl=this.renderer.el(i),color=this.state.bottles[from].top;this.state.move(from,i);this.busy=true;this.sound.play('pour');this.sound.vibrate(20);await this.anim.pour(fromEl,toEl,color);this.busy=false;this.renderer.render(this.state);this.save();this.checkWin()
+    const fromEl=this.renderer.el(from),toEl=this.renderer.el(i),color=this.state.bottles[from].top;this.state.move(from,i);this.busy=true;this.sound.play('pour');this.sound.vibrate(20);
+    try{await this.anim.pour(fromEl,toEl,color)}catch(e){console.warn('Pour animation failed',e)}finally{this.busy=false;this.renderer.render(this.state);this.save();this.checkWin()}
   }
-  undo(){if(this.busy)return;if(!this.state.undo()){this.renderer.toast('戻れる手がありません');return}this.sound.play('select');this.renderer.render(this.state);this.save()}
-  restart(){if(this.busy)return;this.state.restart();this.sound.play('select');this.renderer.render(this.state);this.anim.stageEnter();this.save()}
-  hint(){if(this.busy)return;const h=this.hints.find(this.state);if(!h){this.sound.play('fail');this.renderer.toast(this.state.coins<K.HINT_COST?'コインが足りません':'ヒントが見つかりません');return}if(!this.state.useHint())return;this.sound.play('coin');this.renderer.render(this.state);this.renderer.hint(h.from,h.to);this.save()}
-  extra(){if(this.busy)return;const r=this.state.addExtra();if(!r.ok){this.sound.play('fail');this.renderer.toast(r.msg);return}this.sound.play('coin');this.renderer.render(this.state);this.save()}
+  undo(){if(this.busy)return;if(!this.state.undo()){this.renderer.toast('戻れる手がありません');return}this.cancelClear();this.sound.play('select');this.renderer.render(this.state);this.save()}
+  restart(){if(this.busy)return;this.cancelClear();this.state.restart();this.sound.play('select');this.renderer.render(this.state);this.anim.stageEnter();this.save()}
+  hint(){if(this.busy||this.state.stageCleared)return;const h=this.hints.find(this.state);if(!h){this.sound.play('fail');this.renderer.toast(this.state.coins<K.HINT_COST?'コインが足りません':'ヒントが見つかりません');return}if(!this.state.useHint())return;this.sound.play('coin');this.renderer.render(this.state);this.renderer.hint(h.from,h.to);this.save()}
+  extra(){if(this.busy||this.state.stageCleared)return;const r=this.state.addExtra();if(!r.ok){this.sound.play('fail');this.renderer.toast(r.msg);return}this.sound.play('coin');this.renderer.render(this.state);this.save()}
   checkWin(){
-    if(!this.state.clear||this.state.stageCleared)return;this.state.stageCleared=true;let reward=0;
-    if(!this.state.completedStages.has(this.state.level)){this.state.completedStages.add(this.state.level);reward+=K.CLEAR_REWARD;if(this.state.level===20&&!this.state.campaignBonusClaimed){this.state.campaignBonusClaimed=true;reward+=K.CAMPAIGN_BONUS}}
-    this.state.coins+=reward;this.sound.play('clear');this.sound.vibrate([70,35,70,35,140]);this.anim.confetti();this.save();setTimeout(()=>this.renderer.showClear(reward,this.state.coins),420)
+    const state=this.state,reward=state.claimClear();if(reward===null)return;
+    this.renderer.render(state);this.sound.play('clear');this.sound.vibrate([70,35,70,35,140]);this.anim.confetti();this.save();
+    clearTimeout(this.clearTimer);this.clearTimer=setTimeout(()=>{this.clearTimer=null;if(this.state===state&&state.stageCleared)this.renderer.showClear(reward,state.coins)},420)
   }
-  next(){this.renderer.hideClear();const stage=new StageManager().load(this.state.level+1),coins=this.state.coins,completed=[...this.state.completedStages],bonus=this.state.campaignBonusClaimed;this.state=new GameState(stage,{coins,completedStages:completed,campaignBonusClaimed:bonus});this.renderer.render(this.state);this.anim.stageEnter();this.save()}
-  random(){this.closeSettings();const diff=this.state.difficulty,stage=new StageManager().random(diff);stage.level=this.state.level;const coins=this.state.coins,completed=[...this.state.completedStages],bonus=this.state.campaignBonusClaimed;this.state=new GameState(stage,{coins,completedStages:completed,campaignBonusClaimed:bonus});this.renderer.render(this.state);this.anim.stageEnter();this.save()}
-  openSettings(){this.renderer.settingsUI();document.getElementById('settingsModal').classList.remove('hidden');this.sound.play('select')}
+  next(){if(this.busy||!this.state.stageCleared)return;const stage=new StageManager().load(this.state.level+1),coins=this.state.coins,completed=[...this.state.completedStages],bonus=this.state.campaignBonusClaimed;this.cancelClear();this.state=new GameState(stage,{coins,completedStages:completed,campaignBonusClaimed:bonus});this.renderer.render(this.state);this.anim.stageEnter();this.save()}
+  random(){if(this.busy)return;const diff=this.state.difficulty,stage=new StageManager().random(diff);if(!stage){this.renderer.toast('ステージの生成に失敗しました');return}stage.level=this.state.level;const coins=this.state.coins,completed=[...this.state.completedStages],bonus=this.state.campaignBonusClaimed;this.cancelClear();this.closeSettings();this.state=new GameState(stage,{coins,completedStages:completed,campaignBonusClaimed:bonus});this.renderer.render(this.state);this.anim.stageEnter();this.save()}
+  openSettings(){if(this.busy)return;this.renderer.settingsUI();document.getElementById('settingsModal').classList.remove('hidden');this.sound.play('select')}
   closeSettings(){document.getElementById('settingsModal').classList.add('hidden')}
-  reset(){if(!confirm('保存データと設定をすべて初期化しますか？'))return;this.storage.clearAll();this.settings.reset();const st=new StageManager().load(1);this.state=new GameState(st);this.closeSettings();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save()}
+  reset(){if(this.busy||!confirm('保存データと設定をすべて初期化しますか？'))return;this.cancelClear();this.storage.clearAll();this.settings.reset();const st=new StageManager().load(1);this.state=new GameState(st);this.closeSettings();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save()}
 }
 document.addEventListener('DOMContentLoaded',()=>new App().init(),{once:true});
 })();
