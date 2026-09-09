@@ -69,18 +69,22 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Require the validated Actions publishing path
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          build_type=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')
-          if [ "$build_type" != "workflow" ]; then
-            gh api --method PUT "repos/$GITHUB_REPOSITORY/pages" -f build_type=workflow > /dev/null
+          # Set Settings > Pages > Source to GitHub Actions once as a maintainer.
+          # GITHUB_TOKEN can deploy Pages, but cannot administer its settings.
+          if ! build_type=$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type'); then
+            echo '::error::Cannot read Pages configuration. Check that Pages is enabled and this job has pages: write.'
+            exit 1
           fi
-          test "$(gh api "repos/$GITHUB_REPOSITORY/pages" --jq '.build_type')" = "workflow"
+          if [ "$build_type" != "workflow" ]; then
+            echo "::error::Pages source is '$build_type'. In Settings > Pages > Build and deployment, set Source to GitHub Actions, then re-run this job. Repository settings cannot be changed by GITHUB_TOKEN."
+            exit 1
+          fi
+          echo 'PASS Pages source: GitHub Actions (validated artifact publishing only).'
 
       - name: Deploy verified artifact to GitHub Pages
         id: deployment
