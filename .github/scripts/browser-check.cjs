@@ -67,12 +67,12 @@ async function runEngine(engine, url){
         const geometry = await page.evaluate(() => {
           const game=document.getElementById('game'),footer=document.getElementById('footer');
           return {overflow:game.scrollWidth-game.clientWidth,footerBottom:footer.getBoundingClientRect().bottom,height:innerHeight,
-            touch:[...document.querySelectorAll('#footer button,#settingsBtn,#journeyBtn')].map(el=>({w:el.offsetWidth,h:el.offsetHeight})),
+            touch:[...document.querySelectorAll('#footer button,#settingsBtn,#journeyBtn')].map(el=>({id:el.id,w:el.offsetWidth,h:el.offsetHeight})),
             unlabeled:[...document.querySelectorAll('.bottle')].filter(el=>!el.getAttribute('aria-label')).length};
         });
         assert.ok(geometry.overflow<=2, `${engine}: no horizontal board overflow at ${viewport.width}, stage ${stage.level}`);
         assert.ok(geometry.footerBottom<=geometry.height+2, 'Footer stays inside the screen');
-        assert.ok(geometry.touch.every(x=>x.w>=44&&x.h>=44), 'Main controls have 44px touch targets');
+        assert.ok(geometry.touch.every(x=>x.w>=44&&x.h>=44), `Main controls have 44px touch targets: ${engine} ${viewport.width}x${viewport.height} ${JSON.stringify(geometry.touch)}`);
         assert.equal(geometry.unlabeled,0);
         await page.locator('.bottle').last().click(); // Also verifies the scrollable expert board remains reachable.
         await page.screenshot({path:path.join(outputs,`${engine}-${viewport.width}x${viewport.height}-stage${stage.level}.png`)});
