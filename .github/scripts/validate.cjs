@@ -31,10 +31,10 @@ if (process.argv.includes('--syntax-only')) process.exit(0);
 
 const boot = "document.addEventListener('DOMContentLoaded',()=>new App().init(),{once:true});";
 assert.equal(source.split(boot).length, 2, 'The boot marker must occur exactly once');
-const exposed = source.replace(boot, 'this.testAPI={K,FIXED_SEEDS,Bottle,StageManager,GameState,HintManager,StorageManager,SettingsManager,App};');
+const exposed = source.replace(boot, 'this.testAPI={K,FIXED_SEEDS,Bottle,StageManager,GameState,HintManager,SolutionPlanner,StorageManager,SettingsManager,App};');
 const context = vm.createContext({ console });
 vm.runInContext(exposed, context, { timeout: 10000 });
-const { K, FIXED_SEEDS, StageManager, GameState, HintManager } = context.testAPI;
+const { K, FIXED_SEEDS, StageManager, GameState, HintManager, SolutionPlanner } = context.testAPI;
 const plain = value => JSON.parse(JSON.stringify(value));
 const same = (actual, expected, message) => assert.deepEqual(plain(actual), plain(expected), message);
 const stages = [];
@@ -201,6 +201,9 @@ function runtime(saved, { blockedStorage = false, legacyKey = false } = {}) {
     append(...nodes) { this.children.push(...nodes); }
     appendChild(node) { this.append(node); return node; }
     setAttribute(k, v) { this[k] = v; }
+    focus() { document.activeElement = this; }
+    querySelector() { return null; }
+    querySelectorAll() { return []; }
     addEventListener(k, fn) { const list = this.listeners.get(k) || []; list.push(fn); this.listeners.set(k, list); }
     remove() {}
     getBoundingClientRect() { return { left: 0, top: 0, width: 58, height: 170 }; }
@@ -229,10 +232,11 @@ function runtime(saved, { blockedStorage = false, legacyKey = false } = {}) {
     removeItem(k) { values.delete(k); }
   };
   const sandbox = vm.createContext({
-    document, localStorage, window: {}, navigator: {}, confirm: () => true,
+    document, localStorage, window: { addEventListener() {} }, navigator: {}, confirm: () => true,
     console: { info() {}, warn() {}, error: console.error },
     setTimeout: (fn, ms) => { timers.set(++timerId, { fn, ms }); return timerId; },
     clearTimeout: id => timers.delete(id)
+    ,setInterval() { return 1; }, clearInterval() {}
   });
   // Deliberately omit structuredClone and Object.hasOwn to cover older Safari.
   vm.runInContext('Object.hasOwn=undefined;', sandbox);
@@ -271,6 +275,7 @@ async function checkApp() {
 
   const rt = runtime();
   const app = rt.createApp();
+  rt.elements.get('closeHelpBtn').listeners.get('click')[0]();
   const solution = stages[0].solution;
   for (const move of solution) assert.ok(app.state.move(move.from, move.to));
   app.checkWin();
@@ -283,6 +288,7 @@ async function checkApp() {
   app.state.move(last.from, last.to);
   app.checkWin();
   app.restart();
+  rt.elements.get('confirmYesBtn').listeners.get('click')[0]();
   rt.flushClear();
   assert.equal(rt.elements.get('clearModal').classList.contains('hidden'), true, 'Restart cancels stale clear timer');
   assert.equal(app.state.coins, 120);
@@ -301,4 +307,53 @@ async function checkApp() {
   console.log('PASS App boot, corrupt/blocked storage, saved clear -> Next Stage, clear timer cancellation, event count and animation recovery');
 }
 
-checkApp().catch(error => { console.error(error); process.exitCode = 1; });
+async function checkAtelier() {
+  const resumed = new GameState(stages[0]);
+  resumed.addExtra(); resumed.useHint(); resumed.move(stages[0].solution[0].from, stages[0].solution[0].to);
+  const restored = GameState.fromSaved(plain(resumed.toJSON()));
+  assert.equal(restored.history.length, 3);
+  assert.ok(restored.undo()); assert.ok(restored.undo()); assert.ok(restored.undo());
+  assert.equal(restored.coins, 100); assert.equal(restored.extraCount, 0); assert.equal(restored.moves, 0);
+  same(restored.bottles.map(b => b.toJSON()), stages[0].bottles);
+  const oldV3 = { ...valid, version: 3 }; delete oldV3.solution; delete oldV3.history;
+  assert.equal(GameState.fromSaved(oldV3).version, undefined);
+  assert.equal(GameState.fromSaved(oldV3).toJSON().version, 4);
+  const completed = solvedGame(6); completed.claimClear();
+  const replay = new GameState(stages[0], { coins: completed.coins, completedStages: [1,2,3,4,5,6], records: completed.records });
+  assert.equal(GameState.fromSaved(plain(replay.toJSON())).level, 1, 'Replay accepts completion records from later stages');
+  const daily = new StageManager().daily('2026-10-03');
+  same(daily.bottles, new StageManager().daily('2026-10-03').bottles, 'Daily date is deterministic');
+  assert.ok(StageManager.validate(daily).ok);
+  const dayGame = new GameState(daily);
+  for(const m of daily.solution) assert.ok(dayGame.move(m.from,m.to));
+  assert.equal(dayGame.claimClear(), 20); assert.equal(dayGame.completedStages.size, 0);
+  const dayReload = GameState.fromSaved(plain(dayGame.toJSON()));
+  dayReload.restart(); for(const m of daily.solution) assert.ok(dayReload.move(m.from,m.to));
+  assert.equal(dayReload.claimClear(), 0, 'Daily reward once per date');
+  const practice = new GameState({ ...stages[0], mode:'practice' });
+  for(const m of stages[0].solution) assert.ok(practice.move(m.from,m.to));
+  assert.equal(practice.claimClear(), 0); assert.equal(practice.completedStages.size, 0);
+  const won = solvedGame(); won.claimClear();
+  assert.equal(won.records['c:1'].stars, 3); assert.equal(won.records['c:1'].moves, won.moves);
+  const assisted = new GameState(stages[0]); assisted.useHint();
+  for(const m of stages[0].solution) assert.ok(assisted.move(m.from,m.to));
+  assisted.claimClear(); assert.equal(assisted.stars, 1);
+  const badHistory = plain(valid); badHistory.history = [{ bottles: [[],[],[],[],[],[]], coins:100, extraCount:0 }];
+  assert.throws(()=>GameState.fromSaved(badHistory));
+  const invalidProof = plain(valid); invalidProof.solution[0].count++;
+  assert.throws(()=>GameState.fromSaved(invalidProof));
+  for(const stage of stages) {
+    const result = await SolutionPlanner.solve(stage.bottles, {maxNodes:50000,maxMs:2000,yieldEvery:0});
+    const path = result.path || SolutionPlanner.proof(new GameState(stage));
+    assert.ok(path?.length, `Solver/proof Stage ${stage.level}`);
+    const game = new GameState(stage);
+    for(const m of path) assert.ok(game.move(m.from,m.to));
+    assert.ok(game.clear, `Solver verified Stage ${stage.level}`);
+  }
+  const impossible=[['red','blue'],['blue','red']];
+  const result=await SolutionPlanner.solve(impossible,{yieldEvery:0});
+  assert.equal(result.status,'deadend');
+  console.log('PASS persisted Undo, v3 migration, replay, daily/practice reward isolation, stars, save proof and bounded solver');
+}
+
+(async()=>{await checkApp();await checkAtelier();})().catch(error => { console.error(error); process.exitCode = 1; });

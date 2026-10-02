@@ -2,9 +2,10 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#090d24">
+<meta name="description" content="ガラス瓶の色水を揃える、静かなパズル。20ステージ、デイリーチャレンジ、記録と中断再開。広告・外部通信なし。">
 <title>Water Sort Puzzle</title>
 <style>
 :root{
@@ -239,48 +240,88 @@ button{font:inherit}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+/* Atelier edition: the original glass, liquid and aurora effects are retained. */
+:root{--bw:64px;--bh:164px;--gap:18px;--text:#f5f3ff;--sub:#9fa9c6}
+button{touch-action:manipulation}button:focus-visible{outline:2px solid #d6c7ff;outline-offset:5px}
+.icon{width:22px;height:22px;display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.masthead{flex:none;display:flex;align-items:center;gap:10px;padding:calc(16px + env(safe-area-inset-top,0px)) 20px 13px}
+.brandmark{width:32px;height:40px;color:#c5b6ff;display:grid;place-items:center}.brandmark .icon{width:30px;height:36px}
+.wordmark{font-size:11px;letter-spacing:.3em;font-weight:750}.brandnote{font-size:9px;letter-spacing:.14em;color:var(--sub);margin-top:4px}
+.navIcon{margin-left:auto;width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:15px;color:#c8c7e2;background:rgba(255,255,255,.035);cursor:pointer}
+#header{background:transparent;border:0;box-shadow:none;padding:4px 20px 12px;backdrop-filter:none;-webkit-backdrop-filter:none}
+#stageTitle{font-size:29px;font-weight:700;letter-spacing:-.04em}#difficulty{font-size:9px;letter-spacing:.13em;padding:4px 8px;margin-top:7px}
+#coinPill{height:38px;font-size:13px;border-color:rgba(255,205,90,.2);background:rgba(255,200,90,.045)}#settingsBtn{width:44px;height:44px;background:rgba(255,255,255,.035);display:grid;place-items:center;border-color:var(--line)}
+#runBar{flex:none;margin:0 20px;padding:12px 0 13px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.runStats{display:flex;justify-content:space-between;gap:12px}.runStat{display:flex;align-items:center;gap:7px;color:#d4d5ea;font-size:13px;font-variant-numeric:tabular-nums}.runStat small{font-size:9px;color:var(--sub);letter-spacing:.07em}.runStat .icon{width:15px;height:15px;color:var(--sub)}
+.completionTrack{height:3px;background:rgba(255,255,255,.065);margin-top:12px;border-radius:8px;overflow:hidden}#completionFill{height:100%;width:0;background:linear-gradient(90deg,var(--accent),#b4e9ed);transition:width .4s}
+#game{padding:28px 10px 20px}#grid{gap:20px 18px;padding:14px 4px 8px}#grid.compact{--bw:60px;--bh:146px;--gap:14px}#grid.dense{--bw:54px;--bh:126px;--gap:12px}
+.bottleNum{bottom:-7px;font-size:10px;color:#8d98b9}.bottle{height:calc(var(--bh) + 27px)}.bottle.available .vessel{border-color:rgba(178,235,222,.8);box-shadow:0 0 18px rgba(124,224,197,.13)}
+.bottle.selected .neck{border-color:#e4dfff}.water .colorMark{display:none;position:absolute;inset:0;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:rgba(255,255,255,.94);text-shadow:0 1px 2px #111;pointer-events:none}
+body[data-labels="true"] .water .colorMark{display:flex}.bottle.done .bottleNum{color:#b5dacb}.bottle.done .bottleNum::after{content:' ✓';font-size:9px}
+#coachBar{flex:none;display:flex;align-items:center;gap:10px;margin:0 18px 7px;min-height:43px;border-radius:14px;padding:7px 10px;color:var(--sub);font-size:11px;line-height:1.6;background:rgba(255,255,255,.025)}
+#coachText{flex:1}#helpBtn{width:34px;height:34px;min-width:34px;border:0;border-radius:50%;background:rgba(255,255,255,.04);color:#b3bdd9;cursor:pointer}.helpIcon{font-size:13px;font-weight:700}
+#footer{padding:10px 16px calc(14px + var(--safe));gap:9px;background:rgba(6,10,29,.38);border-color:rgba(255,255,255,.065)}.action{min-height:69px;border-radius:18px;background:rgba(255,255,255,.025);box-shadow:inset 0 1px rgba(255,255,255,.03)}.action .lbl{font-size:10px;color:#c5c8db;font-weight:600}.action .cost{font-size:9px;min-height:12px}.action .ico{height:23px}.action.special{background:rgba(145,112,255,.07);border-color:rgba(164,145,225,.17)}
+#toast{max-width:calc(100% - 32px);width:max-content;border-radius:14px;white-space:normal;line-height:1.5;text-align:center;bottom:calc(139px + var(--safe))}
+.card{width:min(390px,100%);padding:26px 23px;background:linear-gradient(155deg,rgba(28,29,65,.99),rgba(10,14,34,.99));border-color:rgba(200,190,241,.19)}.modalBack{padding:20px}
+.eyebrow{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:#b7afd3;margin-bottom:10px}.card h2{font-size:24px;font-weight:650;letter-spacing:-.04em}.card p{font-size:12px;line-height:1.8;color:var(--sub)}.cardHead{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.closeIcon{width:36px;height:36px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.03);color:var(--sub);cursor:pointer}
+.clearIcon{font-size:0;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;margin:0 auto 20px;color:#c5b6ff;background:radial-gradient(circle,rgba(175,139,255,.18),rgba(175,139,255,.02));border:1px solid rgba(186,159,255,.18)}.clearIcon .icon{width:36px;height:43px}.clearTitle{font-size:29px;font-weight:650;margin-bottom:9px;background:none;color:#f4efff}.resultStars{font-size:27px;letter-spacing:8px;color:#f5cf73;margin:16px 0 9px}.resultDetails{display:flex;gap:8px;margin:16px 0}.resultDetails>div{flex:1;border:1px solid var(--line);border-radius:13px;padding:11px 4px}.resultDetails small{display:block;font-size:9px;color:var(--sub);margin-bottom:4px}.resultDetails strong{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums}.resultNote{margin-bottom:18px;font-size:11px;color:var(--sub)}#rewardText{font-size:14px}#totalText{font-size:11px;margin-bottom:16px}.primary{font-size:13px;font-weight:650;padding:15px}.ghost{font-size:12px;min-height:43px;font-weight:500}.settingsTitle{font-size:22px;font-weight:650;text-align:left}.settingRow{min-height:56px}.settingRow .label{font-size:12px}.choice,.toggle{font-size:10px;padding:9px 10px;min-height:37px}.settingsActions{gap:8px}.subtle{font-size:9px!important;letter-spacing:.02em}.mutedLink{border:0;background:none;color:#b5bcd3;font-size:11px;padding:10px;cursor:pointer}
+.journeyCard{width:min(460px,100%)}.journeySummary{font-size:12px;color:var(--sub);margin-bottom:20px}.chapter{margin-top:21px}.chapterHead{display:flex;justify-content:space-between;margin-bottom:9px;font-size:10px;letter-spacing:.1em;color:var(--sub)}.stageTiles{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}.stageTile{min-height:65px;border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:rgba(255,255,255,.035);color:var(--text);font-size:16px;cursor:pointer}.stageTile small{font-size:8px;color:#dfc07f;letter-spacing:1px}.stageTile.current{border-color:#a898d7;background:rgba(151,117,239,.16)}.stageTile:disabled{color:#69728e;background:rgba(255,255,255,.01);cursor:default}.modeActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:23px}.modeActions button{text-align:left;padding:13px 11px;line-height:1.6}.modeActions strong{font-size:12px;display:block}.modeActions small{font-size:10px;color:var(--sub)}
+.lesson{display:flex;gap:13px;padding:15px 0;border-bottom:1px solid var(--line)}.lesson b{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:rgba(148,115,255,.12);color:#cbbbe9;flex:none;font-size:11px}.lesson strong{display:block;font-size:13px;margin-bottom:4px;font-weight:650}.helpFoot{margin:18px 0}.dialogActions{display:grid;gap:8px;margin-top:20px}.screenReader{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+body[data-motion="false"] *,body[data-motion="false"] *::before,body[data-motion="false"] *::after{animation:none!important;transition:none!important}
+@media(max-width:350px){:root{--bw:58px;--bh:142px;--gap:14px}.masthead{padding-left:14px;padding-right:14px}#header{padding-left:14px;padding-right:14px}#stageTitle{font-size:25px}#grid{gap:16px 12px}#grid.compact{--bw:54px;--bh:128px}#grid.dense{--bw:48px;--bh:108px}#footer{padding-left:10px;padding-right:10px;gap:6px}.action{min-height:65px}.choice{padding:8px}#game{padding-top:20px}}
+@media(max-height:730px){.masthead{padding-top:calc(9px + env(safe-area-inset-top,0px));padding-bottom:5px}#header{padding-bottom:9px}#runBar{padding:9px 0}#grid{--bh:142px}#grid.compact{--bh:121px}#grid.dense{--bh:105px}#game{padding:19px 8px 12px}}
+@media(min-width:560px){#app{max-width:660px}.masthead{padding-top:27px}#grid{--bw:73px;--bh:185px;gap:24px}#grid.compact{--bw:65px;--bh:163px}#grid.dense{--bw:60px;--bh:144px}#footer{padding-bottom:23px}.action{min-height:76px}}
+@media(max-height:500px) and (min-width:560px){.masthead{display:none}#header{padding-top:10px}#grid{--bh:140px}#grid.compact,#grid.dense{--bh:115px}#coachBar{display:none}.action{min-height:52px}}
 </style>
 </head>
 <body data-theme="Purple">
 <div id="scene"></div><div id="stars"></div>
 <div id="app">
+  <div class="masthead"><span class="brandmark" data-icon="drop" aria-hidden="true"></span><div><div class="wordmark">WATER SORT</div><div class="brandnote">A QUIET COLOR RITUAL</div></div><button id="journeyBtn" class="navIcon" aria-label="ステージ一覧" data-icon="grid"></button></div>
   <header id="header">
     <div class="stageBlock"><div id="stageTitle">Stage 1</div><div id="difficulty" class="easy">EASY</div></div>
     <div id="coinPill"><span class="coinIcon"></span><span id="coinValue">100</span></div>
-    <button id="settingsBtn" aria-label="設定">⚙️</button>
+    <button id="settingsBtn" aria-label="設定" data-icon="settings"></button>
   </header>
-  <main id="game"><div id="grid"></div></main>
+  <section id="runBar" aria-label="プレイ記録"><div class="runStats"><div class="runStat"><span data-icon="steps" aria-hidden="true"></span><span id="moveValue">0</span><small>手</small></div><div class="runStat"><span data-icon="clock" aria-hidden="true"></span><span id="timeValue">0:00</span></div><div class="runStat"><small>BEST</small><span id="bestValue">—</span></div></div><div class="completionTrack"><div id="completionFill"></div></div></section>
+  <main id="game" aria-label="色水のパズル盤面"><div id="grid"></div></main>
+  <div id="coachBar"><span id="coachText">移したいビン → 移し先をタップ</span><button id="helpBtn" aria-label="遊び方"><span class="helpIcon">?</span></button></div>
   <footer id="footer">
-    <button id="undoBtn" class="action"><span class="ico">↩</span><span class="lbl">Undo</span></button>
-    <button id="restartBtn" class="action"><span class="ico">↺</span><span class="lbl">Restart</span></button>
-    <button id="hintBtn" class="action special"><span class="ico">💡</span><span class="lbl">Hint</span><span class="cost">-10 🪙</span></button>
-    <button id="extraBtn" class="action special"><span class="ico">🧪</span><span class="lbl">+Bottle</span><span class="cost">-20 🪙</span></button>
+    <button id="undoBtn" class="action" aria-label="一手戻す"><span class="ico" data-icon="undo"></span><span class="lbl">戻す</span><span class="cost">無料</span></button>
+    <button id="restartBtn" class="action" aria-label="ステージをやり直す"><span class="ico" data-icon="restart"></span><span class="lbl">やり直す</span><span class="cost">最初から</span></button>
+    <button id="hintBtn" class="action special"><span class="ico" data-icon="hint"></span><span class="lbl">ヒント</span><span class="cost">10 コイン</span></button>
+    <button id="extraBtn" class="action special"><span class="ico" data-icon="bottle"></span><span class="lbl">空ビン追加</span><span class="cost">20 コイン</span></button>
   </footer>
 </div>
-<div id="toast"></div><div id="confetti"></div>
-<div id="clearModal" class="modalBack hidden">
+<div id="toast" role="status" aria-live="polite"></div><div id="confetti" aria-hidden="true"></div>
+<div id="clearModal" class="modalBack hidden" role="dialog" aria-modal="true" aria-labelledby="clearHeading">
   <div class="card clearCard">
-    <div class="clearIcon">🎉</div><div class="clearTitle">Complete!</div>
+    <div class="clearIcon" data-icon="drop" aria-hidden="true"></div><div class="eyebrow">A LITTLE MOMENT OF CLARITY</div><h2 id="clearHeading" class="clearTitle">すべて、きれいに。</h2>
+    <div id="resultStars" class="resultStars" aria-label="星の評価">★☆☆</div><div class="resultDetails"><div><small>手数</small><strong id="resultMoves">0</strong></div><div><small>時間</small><strong id="resultTime">0:00</strong></div><div><small>手数の目安</small><strong id="resultPar">—</strong></div></div><div id="resultNote" class="resultNote"></div>
     <div id="rewardText">+20 コイン</div><div id="totalText">合計: 120 🪙</div>
-    <button id="nextBtn" class="primary">Next Stage →</button>
+    <button id="nextBtn" class="primary">次のステージへ →</button><button id="clearJourneyBtn" class="mutedLink">ステージ一覧を見る</button>
   </div>
 </div>
-<div id="settingsModal" class="modalBack hidden">
+<div id="settingsModal" class="modalBack hidden" role="dialog" aria-modal="true" aria-labelledby="settingsHeading">
   <div class="card">
-    <div class="settingsTitle">⚙️ Settings</div>
+    <div class="eyebrow">MAKE IT YOURS</div><h2 id="settingsHeading" class="settingsTitle">自分のペースで。</h2>
     <div class="settingRow"><span class="label">🔊 サウンド</span><button id="soundBtn" class="toggle on">ON</button></div>
     <div class="settingRow"><span class="label">📳 バイブ</span><button id="vibBtn" class="toggle on">ON</button></div>
     <div class="settingRow"><span class="label">🎨 テーマ</span><div id="themeGroup" class="choiceGroup"><button class="choice" data-v="Purple">Purple</button><button class="choice" data-v="Blue">Blue</button><button class="choice" data-v="Dark">Dark</button></div></div>
     <div class="settingRow"><span class="label">⚡ 速度</span><div id="speedGroup" class="choiceGroup"><button class="choice" data-v="Slow">Slow</button><button class="choice" data-v="Normal">Normal</button><button class="choice" data-v="Fast">Fast</button></div></div>
-    <div class="settingsActions"><button id="randomBtn" class="ghost">🎲 ランダムステージ</button><button id="resetBtn" class="ghost danger">🗑️ データ初期化</button><button id="closeSettingsBtn" class="ghost">閉じる</button></div>
+    <div class="settingRow"><span class="label">色の識別記号</span><button id="labelsBtn" class="toggle">OFF</button></div><div class="settingRow"><span class="label">アニメーション</span><button id="motionBtn" class="toggle on">ON</button></div>
+    <div class="settingsActions"><button id="randomBtn" class="ghost">ランダム練習 · 報酬なし</button><button id="settingsHelpBtn" class="ghost">遊び方と星の条件</button><button id="resetBtn" class="ghost danger">保存データを初期化</button><button id="closeSettingsBtn" class="ghost">閉じる</button></div><p id="saveStatus" class="subtle" style="margin-top:14px;text-align:center">端末内に自動保存 · 外部通信なし</p>
   </div>
 </div>
+<div id="journeyModal" class="modalBack hidden" role="dialog" aria-modal="true" aria-labelledby="journeyHeading"><div class="card journeyCard"><div class="cardHead"><div><div class="eyebrow">YOUR COLOR JOURNEY</div><h2 id="journeyHeading">色をめぐる旅。</h2></div><button id="closeJourneyBtn" class="closeIcon" aria-label="ステージ一覧を閉じる" data-icon="close"></button></div><div id="journeySummary" class="journeySummary"></div><div id="stageList"></div><div class="modeActions"><button id="dailyBtn" class="ghost"><strong>今日のパズル</strong><small id="dailyLabel">毎日ひとつ、新しい色。</small></button><button id="practiceBtn" class="ghost"><strong>ランダム練習</strong><small>今の難易度で。報酬なし。</small></button></div><p class="subtle" style="margin-top:15px">クリア済みの面は何度でも。コイン報酬は初回のみ。</p></div></div>
+<div id="helpModal" class="modalBack hidden" role="dialog" aria-modal="true" aria-labelledby="helpHeading"><div class="card"><div class="eyebrow">TAKE A BREATH. FIND YOUR FLOW.</div><h2 id="helpHeading">揃えるだけ。奥は深い。</h2><div class="lesson"><b>1</b><div><strong>移したいビン → 移し先</strong><p>一番上の、連続した同じ色が移動します。</p></div></div><div class="lesson"><b>2</b><div><strong>空ビンか、同じ色の上へ</strong><p>4段まで入ります。移せるビンは淡く光ります。</p></div></div><div class="lesson"><b>3</b><div><strong>すべての色をひとつずつ</strong><p>「同じ色で4段」か「空」に揃えばクリア。</p></div></div><p class="helpFoot">★ クリア　★★ ヒント・追加ビンなし<br>★★★ さらに手数の目安以内。目安は最短手数ではありません。<br>戻す：購入も返金。やり直す：購入の返金なし。</p><button id="closeHelpBtn" class="primary">さあ、ひと息。</button></div></div>
+<div id="confirmModal" class="modalBack hidden" role="dialog" aria-modal="true" aria-labelledby="confirmHeading"><div class="card"><div class="eyebrow">A FRESH START</div><h2 id="confirmHeading"></h2><p id="confirmText" style="margin-top:14px"></p><div class="dialogActions"><button id="confirmYesBtn" class="primary">やり直す</button><button id="confirmNoBtn" class="ghost">このまま続ける</button></div></div></div>
 <script>
 (()=>{'use strict';
 
 const K=Object.freeze({
   CAP:4,INITIAL_COINS:100,CLEAR_REWARD:20,CAMPAIGN_BONUS:100,HINT_COST:10,EXTRA_COST:20,MAX_EXTRA:3,
-  SAVE_VERSION:3,SAVE_KEY:'watersort_game_v3',SETTINGS_KEY:'watersort_settings_v3',
+  SAVE_VERSION:4,SAVE_KEY:'watersort_game_v3',SETTINGS_KEY:'watersort_settings_v3',
   SPEED:Object.freeze({Slow:480,Normal:300,Fast:150}),
   COLORS:Object.freeze(['red','blue','green','yellow','orange','cyan','purple','pink','gray','brown']),
   STYLE:Object.freeze({
@@ -296,6 +337,10 @@ const K=Object.freeze({
   })
 });
 const FIXED_SEEDS=Object.freeze([42,137,256,512,1337,2048,3141,6283,9999,12345,54321,99999,11111,22222,33333,44444,55555,66666,77777,88888]);
+const copy=value=>JSON.parse(JSON.stringify(value));
+const ICONS=Object.freeze({drop:'<path d="M12 2C9 6 4 11 4 16a8 8 0 0 0 16 0c0-5-5-10-8-14Z"/><path d="M8 16a4 4 0 0 0 4 4"/>',grid:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',settings:'<path d="m9 3-1 3-3 1-2 3 2 2-1 3 2 3 3-1 2 3h3l1-3 3-1 2-3-2-2 1-3-2-3-3 1-2-3Z"/><circle cx="12" cy="12" r="3"/>',steps:'<path d="M4 17h4v-5h5V7h7M17 4l3 3-3 3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',undo:'<path d="m8 4-5 5 5 5M3 9h10a7 7 0 0 1 0 14"/>',restart:'<path d="M3 10a9 9 0 1 1 1 8M3 4v6h6"/>',hint:'<path d="M9 18h6M9 21h6M8 15a7 7 0 1 1 8 0l-1 3H9Z"/>',bottle:'<path d="M9 2h6v4l3 4v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10l3-4ZM6 13h12M12 15v5M10 17h4"/>',close:'<path d="m6 6 12 12M18 6 6 18"/>'});
+const icon=name=>`<svg class="icon" viewBox="0 0 24 26" aria-hidden="true">${ICONS[name]||ICONS.drop}</svg>`;
+const timeText=seconds=>`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
 
 class RNG{
   constructor(seed){this.s=seed>>>0}
@@ -322,11 +367,11 @@ class StorageManager{
 }
 
 class SettingsManager{
-  constructor(storage){this.storage=storage;this.defaults={sound:true,vibration:true,theme:'Purple',speed:'Normal'};this.values=this.#validated(storage.loadSettings());this.apply()}
-  #validated(v){const x={...this.defaults,...(v&&typeof v==='object'&&!Array.isArray(v)?v:{})};if(!['Purple','Blue','Dark'].includes(x.theme))x.theme='Purple';if(!Object.prototype.hasOwnProperty.call(K.SPEED,x.speed))x.speed='Normal';if(typeof x.sound!=='boolean')x.sound=true;if(typeof x.vibration!=='boolean')x.vibration=true;return x}
+  constructor(storage){this.storage=storage;this.defaults={sound:true,vibration:true,theme:'Purple',speed:'Normal',labels:false,motion:!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,helpSeen:false};this.values=this.#validated(storage.loadSettings());this.apply()}
+  #validated(v){const x={...this.defaults,...(v&&typeof v==='object'&&!Array.isArray(v)?v:{})};if(!['Purple','Blue','Dark'].includes(x.theme))x.theme='Purple';if(!Object.prototype.hasOwnProperty.call(K.SPEED,x.speed))x.speed='Normal';for(const k of ['sound','vibration','labels','motion','helpSeen'])if(typeof x[k]!=='boolean')x[k]=this.defaults[k];return x}
   set(k,v){if(!Object.prototype.hasOwnProperty.call(this.defaults,k))return;this.values[k]=v;this.values=this.#validated(this.values);this.storage.saveSettings(this.values);this.apply()}
   reset(){this.values={...this.defaults};this.storage.saveSettings(this.values);this.apply()}
-  apply(){document.body.dataset.theme=this.values.theme;document.documentElement.style.setProperty('--dur',`${K.SPEED[this.values.speed]}ms`)}
+  apply(){document.body.dataset.theme=this.values.theme;document.body.dataset.labels=String(this.values.labels);document.body.dataset.motion=String(this.values.motion);document.documentElement.style.setProperty('--dur',`${K.SPEED[this.values.speed]}ms`)}
   get ms(){return K.SPEED[this.values.speed]||300}
 }
 
@@ -345,6 +390,8 @@ class SoundManager{
 }
 
 class StageManager{
+  static today(date=new Date()){return`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
+  daily(date=StageManager.today()){const seed=Number(date.replace(/-/g,''))+71833,stage=StageManager.buildRandom('normal',seed);if(!stage)throw new Error('Daily stage generation failed');return{...stage,level:6,mode:'daily',dailyDate:date}}
   static difficulty(level){if(level<=5)return'easy';if(level<=10)return'normal';if(level<=15)return'hard';if(level<=20)return'expert';return['easy','normal','hard','expert'][Math.floor((level-21)/5)%4]}
   static label(d){return({easy:'EASY',normal:'NORMAL',hard:'HARD',expert:'EXPERT'})[d]||'EASY'}
   static config(d){return K.DIFF[d]||K.DIFF.easy}
@@ -426,34 +473,43 @@ class GameState{
     this.level=stage.level||1;this.difficulty=stage.difficulty||StageManager.difficulty(this.level);
     this.coins=Number.isInteger(options.coins)?options.coins:K.INITIAL_COINS;
     this.bottles=(stage.bottles||[]).map(x=>new Bottle(x));this.initialBottles=(stage.initialBottles||stage.bottles||[]).map(x=>new Bottle(x));
-    this.extraCount=options.extraCount||0;this.history=[];this.selected=null;this.stageCleared=Boolean(options.stageCleared);
-    this.completedStages=new Set(Array.isArray(options.completedStages)?options.completedStages:[]);this.campaignBonusClaimed=Boolean(options.campaignBonusClaimed);this.lastMove=null
+    this.mode=stage.mode||options.mode||'campaign';this.dailyDate=stage.dailyDate||options.dailyDate||'';this.solution=copy(stage.solution||[]);
+    this.extraCount=options.extraCount||0;this.history=copy(options.history||[]);this.selected=null;this.stageCleared=Boolean(options.stageCleared);
+    this.completedStages=new Set(Array.isArray(options.completedStages)?options.completedStages:[]);this.campaignBonusClaimed=Boolean(options.campaignBonusClaimed);this.lastMove=options.lastMove?{...options.lastMove}:null;
+    this.moves=options.moves||0;this.elapsedSec=options.elapsedSec||0;this.hintsUsed=options.hintsUsed||0;this.extraUsed=options.extraUsed||0;this.records=copy(options.records||{});this.dailyCompleted=new Set(options.dailyCompleted||[])
   }
-  snapshot(){return{bottles:this.bottles.map(b=>b.toJSON()),coins:this.coins,extraCount:this.extraCount,stageCleared:this.stageCleared,completedStages:[...this.completedStages],campaignBonusClaimed:this.campaignBonusClaimed,lastMove:this.lastMove?{...this.lastMove}:null}}
+  get recordKey(){return this.mode==='campaign'?`c:${this.level}`:this.mode==='daily'?`d:${this.dailyDate}`:null}
+  get par(){return this.solution.length||StageManager.config(this.difficulty).target}
+  get stars(){return this.hintsUsed||this.extraUsed?1:this.moves<=this.par?3:2}
+  snapshot(){return{bottles:this.bottles.map(b=>b.toJSON()),coins:this.coins,extraCount:this.extraCount,stageCleared:this.stageCleared,completedStages:[...this.completedStages],campaignBonusClaimed:this.campaignBonusClaimed,lastMove:this.lastMove?{...this.lastMove}:null,moves:this.moves,hintsUsed:this.hintsUsed,extraUsed:this.extraUsed,records:copy(this.records),dailyCompleted:[...this.dailyCompleted]}}
   pushHistory(){this.history.push(this.snapshot());if(this.history.length>150)this.history.shift()}
-  restore(s){this.bottles=s.bottles.map(x=>new Bottle(x));this.coins=s.coins;this.extraCount=s.extraCount;this.stageCleared=Boolean(s.stageCleared);this.completedStages=new Set(s.completedStages);this.campaignBonusClaimed=s.campaignBonusClaimed;this.lastMove=s.lastMove?{...s.lastMove}:null;this.selected=null}
+  restore(s){this.bottles=s.bottles.map(x=>new Bottle(x));this.coins=s.coins;this.extraCount=s.extraCount;this.stageCleared=Boolean(s.stageCleared);this.completedStages=new Set(s.completedStages);this.campaignBonusClaimed=s.campaignBonusClaimed;this.lastMove=s.lastMove?{...s.lastMove}:null;this.moves=s.moves||0;this.hintsUsed=s.hintsUsed||0;this.extraUsed=s.extraUsed||0;this.records=copy(s.records||{});this.dailyCompleted=new Set(s.dailyCompleted||[]);this.selected=null}
   undo(){const s=this.history.pop();if(!s)return false;this.restore(s);return true}
-  restart(){this.bottles=this.initialBottles.map(b=>b.clone());this.extraCount=0;this.history=[];this.selected=null;this.stageCleared=false;this.lastMove=null}
+  restart(){this.bottles=this.initialBottles.map(b=>b.clone());this.extraCount=0;this.history=[];this.selected=null;this.stageCleared=false;this.lastMove=null;this.moves=0;this.elapsedSec=0;this.hintsUsed=0;this.extraUsed=0}
   canMove(f,t){return f!==t&&this.bottles[f]&&this.bottles[t]&&this.bottles[f].canPourTo(this.bottles[t])}
-  move(f,t){if(!this.canMove(f,t))return false;this.pushHistory();const source=this.bottles[f],target=this.bottles[t],n=Math.min(source.run,target.free);target.give(source.take(n));this.selected=null;this.lastMove={from:f,to:t};return true}
-  addExtra(){if(this.extraCount>=K.MAX_EXTRA)return{ok:false,msg:'追加ビンは最大3本です'};if(this.coins<K.EXTRA_COST)return{ok:false,msg:'コインが足りません'};this.pushHistory();this.coins-=K.EXTRA_COST;this.bottles.push(new Bottle());this.extraCount++;this.selected=null;return{ok:true}}
-  useHint(){if(this.coins<K.HINT_COST)return false;this.pushHistory();this.coins-=K.HINT_COST;this.selected=null;return true}
+  move(f,t){if(!this.canMove(f,t))return false;this.pushHistory();const source=this.bottles[f],target=this.bottles[t],n=Math.min(source.run,target.free);target.give(source.take(n));this.selected=null;this.lastMove={from:f,to:t};this.moves++;return true}
+  addExtra(){if(this.extraCount>=K.MAX_EXTRA)return{ok:false,msg:'追加ビンは最大3本です'};if(this.coins<K.EXTRA_COST)return{ok:false,msg:'コインが足りません'};this.pushHistory();this.coins-=K.EXTRA_COST;this.bottles.push(new Bottle());this.extraCount++;this.extraUsed++;this.selected=null;return{ok:true}}
+  useHint(){if(this.coins<K.HINT_COST)return false;this.pushHistory();this.coins-=K.HINT_COST;this.hintsUsed++;this.selected=null;return true}
   get clear(){return this.bottles.length>0&&this.bottles.every(b=>b.complete)}
   claimClear(){
     if(!this.clear||this.stageCleared)return null;
     this.stageCleared=true;let reward=0;
-    if(!this.completedStages.has(this.level)){
+    if(this.mode==='campaign'&&!this.completedStages.has(this.level)){
       this.completedStages.add(this.level);reward=K.CLEAR_REWARD;
       if(this.level===20&&!this.campaignBonusClaimed){this.campaignBonusClaimed=true;reward+=K.CAMPAIGN_BONUS}
     }
+    if(this.mode==='daily'&&!this.dailyCompleted.has(this.dailyDate)){this.dailyCompleted.add(this.dailyDate);reward=K.CLEAR_REWARD}
+    const key=this.recordKey;if(key){const prior=this.records[key];this.records[key]={stars:Math.max(prior?.stars||0,this.stars),moves:Math.min(prior?.moves??Infinity,this.moves),seconds:Math.min(prior?.seconds??Infinity,this.elapsedSec),clears:(prior?.clears||0)+1}}
     this.coins+=reward;return reward
   }
-  toJSON(){return{version:K.SAVE_VERSION,level:this.level,difficulty:this.difficulty,coins:this.coins,bottles:this.bottles.map(b=>b.toJSON()),initialBottles:this.initialBottles.map(b=>b.toJSON()),extraCount:this.extraCount,completedStages:[...this.completedStages],campaignBonusClaimed:this.campaignBonusClaimed,stageCleared:this.stageCleared}}
+  toJSON(){return{version:K.SAVE_VERSION,level:this.level,difficulty:this.difficulty,coins:this.coins,bottles:this.bottles.map(b=>b.toJSON()),initialBottles:this.initialBottles.map(b=>b.toJSON()),solution:copy(this.solution),extraCount:this.extraCount,completedStages:[...this.completedStages],campaignBonusClaimed:this.campaignBonusClaimed,stageCleared:this.stageCleared,mode:this.mode,dailyDate:this.dailyDate,moves:this.moves,elapsedSec:this.elapsedSec,hintsUsed:this.hintsUsed,extraUsed:this.extraUsed,records:copy(this.records),dailyCompleted:[...this.dailyCompleted],history:copy(this.history),lastMove:this.lastMove?{...this.lastMove}:null}}
   static fromSaved(d){
-    if(!d||![2,K.SAVE_VERSION].includes(d.version)||!Number.isSafeInteger(d.level)||d.level<1||d.level>1000000||!Number.isSafeInteger(d.coins)||d.coins<0||!Array.isArray(d.bottles))throw new Error('invalid save');
+    if(!d||![2,3,K.SAVE_VERSION].includes(d.version)||!Number.isSafeInteger(d.level)||d.level<1||d.level>1000000||!Number.isSafeInteger(d.coins)||d.coins<0||!Array.isArray(d.bottles))throw new Error('invalid save');
     const legacy=d.version===2,initial=legacy?d.initial:d.initialBottles;if(!Array.isArray(initial))throw new Error('invalid initial board');
     const diff=['easy','normal','hard','expert'].includes(d.difficulty)?d.difficulty:StageManager.difficulty(d.level),cfg=StageManager.config(diff),allowed=K.COLORS.slice(0,cfg.colors);
     if(diff!==StageManager.difficulty(d.level)||(d.difficulty!==undefined&&d.difficulty!==diff))throw new Error('invalid difficulty');
+    let mode=d.mode||'campaign';if(!['campaign','daily','practice'].includes(mode))throw new Error('invalid mode');
+    if(mode==='daily'&&(d.level!==6||!/^\d{4}-\d{2}-\d{2}$/.test(d.dailyDate||'')))throw new Error('invalid daily stage');
     const extra=d.extraCount===undefined?d.bottles.length-cfg.colors-cfg.empty:d.extraCount;
     if(!Number.isInteger(extra)||extra<0||extra>K.MAX_EXTRA)throw new Error('invalid extra bottle count');
     const validBoard=(a,count)=>{
@@ -464,14 +520,70 @@ class GameState{
     };
     if(!validBoard(d.bottles,cfg.colors+cfg.empty+extra)||!validBoard(initial,cfg.colors+cfg.empty)||initial.filter(x=>!x.length).length!==cfg.empty||StageManager.solved(initial))throw new Error('invalid board');
     const completed=legacy?Array.from({length:Math.max(0,d.level-1)},(_,i)=>i+1):(Array.isArray(d.completedStages)?d.completedStages:[]);
-    if(completed.some(n=>!Number.isSafeInteger(n)||n<1||n>d.level))throw new Error('invalid completed stages');
+    if(completed.length>10000||completed.some(n=>!Number.isSafeInteger(n)||n<1||n>1000000))throw new Error('invalid completed stages');
     if(!legacy&&d.stageCleared!==undefined&&typeof d.stageCleared!=='boolean')throw new Error('invalid clear flag');
     if(d.campaignBonusClaimed!==undefined&&typeof d.campaignBonusClaimed!=='boolean')throw new Error('invalid bonus flag');
     const stageCleared=legacy?Boolean(d.rewardGranted):Boolean(d.stageCleared);
     if(stageCleared&&!StageManager.solved(d.bottles))throw new Error('invalid cleared board');
-    if(stageCleared&&!completed.includes(d.level))completed.push(d.level);
+    if(stageCleared&&mode==='campaign'&&!completed.includes(d.level))completed.push(d.level);
     const campaignBonusClaimed=Boolean(d.campaignBonusClaimed)||completed.includes(20);
-    return new GameState({level:d.level,difficulty:diff,bottles:d.bottles,initialBottles:initial},{coins:d.coins,extraCount:extra,completedStages:completed,campaignBonusClaimed,stageCleared});
+    const metrics={};for(const k of ['moves','elapsedSec','hintsUsed','extraUsed']){const n=d[k]??0;if(!Number.isSafeInteger(n)||n<0||n>10000000)throw new Error('invalid metric');metrics[k]=n}
+    const records=d.records||{};if(typeof records!=='object'||Array.isArray(records)||Object.keys(records).length>10000)throw new Error('invalid records');
+    for(const [k,v] of Object.entries(records)){if(!/^(c:[1-9]\d{0,5}|d:\d{4}-\d{2}-\d{2})$/.test(k)||!v||![1,2,3].includes(v.stars)||!['moves','seconds','clears'].every(n=>Number.isSafeInteger(v[n])&&v[n]>=0&&v[n]<=10000000))throw new Error('invalid record')}
+    const dailyCompleted=d.dailyCompleted||[];if(!Array.isArray(dailyCompleted)||dailyCompleted.length>10000||dailyCompleted.some(x=>typeof x!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(x)))throw new Error('invalid daily history');
+    let solution=d.solution||[];
+    if(!Array.isArray(solution)||solution.length>500)throw new Error('invalid solution');
+    if(solution.length&&!StageManager.validate({difficulty:diff,bottles:initial,solution}).ok)throw new Error('invalid solution proof');
+    if(!solution.length&&d.level<=20&&mode==='campaign'){const fixed=new StageManager().load(d.level);if(StageManager.key(fixed.bottles)===StageManager.key(initial))solution=fixed.solution;else if(d.version<4)mode='practice'}
+    const state=new GameState({level:d.level,difficulty:diff,bottles:d.bottles,initialBottles:initial,solution,mode,dailyDate:d.dailyDate},{coins:d.coins,extraCount:extra,completedStages:completed,campaignBonusClaimed,stageCleared,records,dailyCompleted,...metrics});
+    if(d.lastMove!==undefined&&d.lastMove!==null){if(!Number.isInteger(d.lastMove.from)||!Number.isInteger(d.lastMove.to)||!state.bottles[d.lastMove.from]||!state.bottles[d.lastMove.to])throw new Error('invalid last move');state.lastMove={...d.lastMove}}
+    if(d.history!==undefined){if(!Array.isArray(d.history)||d.history.length>150)throw new Error('invalid Undo history');state.history=d.history.map(s=>{
+      if(!s||!validBoard(s.bottles,cfg.colors+cfg.empty+s.extraCount)||!Number.isInteger(s.extraCount)||s.extraCount<0||s.extraCount>K.MAX_EXTRA)throw new Error('invalid Undo board');
+      const entry=GameState.fromSaved({...state.toJSON(),...s,history:[],elapsedSec:state.elapsedSec,version:K.SAVE_VERSION});return entry.snapshot()
+    })}
+    return state;
+  }
+}
+
+class SolutionPlanner{
+  static canonical(b){return b.map(x=>x.join('.')).sort().join('|')}
+  static estimate(b){const colors=new Set(),blocks=b.reduce((sum,x)=>{let n=0;for(let i=0;i<x.length;i++){colors.add(x[i]);if(i===0||x[i]!==x[i-1])n++}return sum+n},0);return blocks-colors.size}
+  static proof(g){
+    if(!g.solution.length)return null;const b=g.initialBottles.map(x=>x.toJSON());for(let i=0;i<g.extraCount;i++)b.push([]);
+    const key=StageManager.key(g.bottles.map(x=>x.toJSON()));
+    for(let i=0;i<g.solution.length;i++){if(StageManager.key(b)===key)return g.solution.slice(i).map(x=>({...x}));const m=g.solution[i];if(StageManager.moveArray(b,m.from,m.to)!==m.count)return null}
+    return null
+  }
+  static moves(b){
+    const result=[];let empty=-1;for(let i=0;i<b.length;i++)if(!b[i].length){empty=i;break}
+    for(let from=0;from<b.length;from++){
+      const s=b[from];if(!s.length||(s.length===4&&s.every(c=>c===s[0])))continue;
+      for(let to=0;to<b.length;to++){
+        if(!StageManager.canMove(b,from,to))continue;const d=b[to];if(!d.length&&(to!==empty||StageManager.run(s)===s.length))continue;
+        result.push({from,to})
+      }
+    }return result
+  }
+  static async solve(board,{maxNodes=24000,maxMs=900,yieldEvery=350}={}){
+    const started=Date.now(),heap=[],best=new Map();let expanded=0,order=0;
+    const push=n=>{n.order=order++;heap.push(n);let i=heap.length-1;while(i){const p=(i-1)>>1;if(heap[p].score<n.score||(heap[p].score===n.score&&heap[p].order<n.order))break;heap[i]=heap[p];i=p}heap[i]=n};
+    const pop=()=>{const first=heap[0],last=heap.pop();if(heap.length){let i=0;while(i*2+1<heap.length){let child=i*2+1;if(child+1<heap.length&&(heap[child+1].score<heap[child].score))child++;if(last.score<=heap[child].score)break;heap[i]=heap[child];i=child}heap[i]=last}return first};
+    const root={board:board.map(x=>[...x]),parent:null,move:null,depth:0,score:0};push(root);best.set(this.canonical(root.board),0);
+    while(heap.length){
+      if(expanded>=maxNodes||Date.now()-started>maxMs)return{status:'limit',path:null,expanded};
+      const n=pop();if(n.depth>best.get(this.canonical(n.board)))continue;
+      if(StageManager.solved(n.board)){const path=[];for(let p=n;p.move;p=p.parent)path.push(p.move);return{status:'solved',path:path.reverse(),expanded}}
+      expanded++;
+      for(const m of this.moves(n.board)){
+        if(n.move&&n.move.from===m.to&&n.move.to===m.from)continue;
+        const next=n.board.map(x=>[...x]),count=StageManager.moveArray(next,m.from,m.to),key=this.canonical(next),depth=n.depth+1;
+        if((best.get(key)??Infinity)<=depth)continue;best.set(key,depth);
+        push({board:next,parent:n,move:{...m,count},depth,score:depth+this.estimate(next)*4})
+      }
+      if(best.size>maxNodes*4)return{status:'limit',path:null,expanded};
+      if(yieldEvery&&expanded%yieldEvery===0)await new Promise(resolve=>setTimeout(resolve,0));
+    }
+    return{status:'deadend',path:null,expanded}
   }
 }
 
@@ -497,6 +609,7 @@ class AnimationManager{
   wait(ms){return new Promise(r=>setTimeout(r,ms))}
   async shake(el){if(!el)return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');await this.wait(430);el.classList.remove('shake')}
   async pour(fromEl,toEl,color){
+    if(!this.settings.values.motion)return;
     if(!fromEl||!toEl)return;const fr=fromEl.getBoundingClientRect(),tr=toEl.getBoundingClientRect(),dir=(tr.left+tr.width/2)>=(fr.left+fr.width/2)?1:-1;
     const dx=(tr.left+tr.width/2)-(fr.left+fr.width/2)-dir*36,dy=(tr.top-fr.top)-18;
     fromEl.style.setProperty('--px',`${dx}px`);fromEl.style.setProperty('--py',`${dy}px`);fromEl.style.setProperty('--tilt',`${dir*68}deg`);
@@ -518,74 +631,123 @@ class AnimationManager{
 }
 
 class Renderer{
-  constructor(settings){this.settings=settings;this.toastTimer=null;this.hintTimer=null}
+  constructor(settings){this.settings=settings;this.toastTimer=null;this.hintTimer=null;this.boardKey=null}
+  icons(){document.querySelectorAll('[data-icon]').forEach(el=>el.innerHTML=icon(el.dataset.icon))}
+  metrics(g){document.getElementById('moveValue').textContent=g.moves;document.getElementById('timeValue').textContent=timeText(g.elapsedSec);const best=g.recordKey&&g.records[g.recordKey];document.getElementById('bestValue').textContent=best?`${best.moves}手`:'—';const total=StageManager.config(g.difficulty).colors,done=g.bottles.filter(b=>b.complete&&!b.empty).length;document.getElementById('completionFill').style.setProperty('width',`${done/total*100}%`)}
   render(g){
-    document.getElementById('stageTitle').textContent=`Stage ${g.level}`;const d=document.getElementById('difficulty');d.textContent=StageManager.label(g.difficulty);d.className=g.difficulty;
+    document.getElementById('stageTitle').textContent=g.mode==='daily'?'Daily Puzzle':g.mode==='practice'?'Free Practice':`Stage ${g.level}`;const d=document.getElementById('difficulty');d.textContent=StageManager.label(g.difficulty)+(g.mode==='daily'?` · ${g.dailyDate.slice(5).replace('-','/')}`:g.mode==='practice'?' · 練習':'');d.className=g.difficulty;
     document.getElementById('coinValue').textContent=g.coins;const grid=document.getElementById('grid'),n=g.bottles.length,cols=n<=6?3:4;grid.style.setProperty('--cols',cols);grid.className=n>=12?'dense':n>=9?'compact':'';
-    grid.innerHTML='';g.bottles.forEach((b,i)=>grid.appendChild(this.#bottle(b,i,g.selected===i)));
+    const key=StageManager.key(g.bottles.map(b=>b.toJSON()));if(this.boardKey!==key){grid.innerHTML='';g.bottles.forEach((b,i)=>grid.appendChild(this.#bottle(b,i,g.selected===i)));this.boardKey=key}
+    g.bottles.forEach((b,i)=>{const el=this.el(i);el?.classList.toggle('selected',g.selected===i);el?.classList.toggle('available',g.selected!==null&&g.canMove(g.selected,i));el?.setAttribute('aria-pressed',String(g.selected===i))});
     document.getElementById('undoBtn').disabled=!g.history.length;document.getElementById('hintBtn').disabled=g.stageCleared||g.coins<K.HINT_COST;document.getElementById('extraBtn').disabled=g.stageCleared||g.coins<K.EXTRA_COST||g.extraCount>=K.MAX_EXTRA
+    this.metrics(g);document.getElementById('coachText').textContent=g.stageCleared?'すべての色が揃いました。':g.selected!==null?`ビン ${g.selected+1} を選択中 · 淡く光るビンへ`:'移したいビン → 移し先をタップ';
+    if(!g.stageCleared&&!SolutionPlanner.moves(g.bottles.map(b=>b.toJSON())).length)document.getElementById('coachText').textContent='動かせる手がありません。「戻す」か「空ビン追加」を。'
   }
   #bottle(b,i,selected){
-    const btn=document.createElement('button');btn.type='button';btn.className='bottle'+(selected?' selected':'')+(b.complete&&!b.empty?' done':'');btn.dataset.i=i;btn.setAttribute('aria-label',`ビン ${i+1}`);
+    const btn=document.createElement('button');btn.type='button';btn.className='bottle'+(selected?' selected':'')+(b.complete&&!b.empty?' done':'');btn.dataset.i=i;const names={red:'赤',blue:'青',green:'緑',yellow:'黄',orange:'橙',cyan:'水色',purple:'紫',pink:'桃',gray:'灰',brown:'茶'};btn.setAttribute('aria-label',`ビン ${i+1}、${b.empty?'空':`下から ${b.segments.map(c=>names[c]).join('、')}`}${b.complete&&!b.empty?'、完成':''}`);
     if(b.complete&&!b.empty)btn.style.setProperty('--glow',(K.STYLE[b.segments[0]]||['','','#fff'])[2]+'88');
     const neck=document.createElement('div');neck.className='neck';const vessel=document.createElement('div');vessel.className='vessel';const lines=document.createElement('div');lines.className='levelLines';const liq=document.createElement('div');liq.className='liquid';
-    const segs=b.segments;segs.forEach((c,idx)=>{const p=K.STYLE[c],w=document.createElement('div');w.className='water'+(idx===segs.length-1?' surface':'');w.style.setProperty('--i',idx);w.style.setProperty('--c1',p[0]);w.style.setProperty('--c2',p[1]);liq.appendChild(w)});
+    const segs=b.segments;segs.forEach((c,idx)=>{const p=K.STYLE[c],w=document.createElement('div');w.className='water'+(idx===segs.length-1?' surface':'');w.style.setProperty('--i',idx);w.style.setProperty('--c1',p[0]);w.style.setProperty('--c2',p[1]);const mark=document.createElement('span');mark.className='colorMark';mark.textContent=String.fromCharCode(65+K.COLORS.indexOf(c));w.appendChild(mark);liq.appendChild(w)});
     const glass=document.createElement('div');glass.className='glass';vessel.append(lines,liq,glass);const num=document.createElement('span');num.className='bottleNum';num.textContent=i+1;btn.append(neck,vessel,num);return btn
   }
   el(i){return document.querySelector(`.bottle[data-i="${i}"]`)}
-  hint(from,to){this.clearHint();this.el(from)?.classList.add('hint-from');this.el(to)?.classList.add('hint-to');this.hintTimer=setTimeout(()=>this.clearHint(),3000)}
+  hint(from,to){this.clearHint();this.el(from)?.classList.add('hint-from');this.el(to)?.classList.add('hint-to');this.hintTimer=setTimeout(()=>this.clearHint(),5500)}
   clearHint(){clearTimeout(this.hintTimer);document.querySelectorAll('.bottle.hint-from,.bottle.hint-to').forEach(e=>e.classList.remove('hint-from','hint-to'))}
   toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('show');clearTimeout(this.toastTimer);this.toastTimer=setTimeout(()=>e.classList.remove('show'),1500)}
-  showClear(reward,total){document.getElementById('rewardText').textContent=reward>0?`+${reward} コイン 🎉`:'クリア済みステージ';document.getElementById('totalText').textContent=`合計: ${total} 🪙`;document.getElementById('clearModal').classList.remove('hidden')}
+  showClear(reward,total,g){document.getElementById('rewardText').textContent=reward>0?`+${reward} コイン`:'報酬は取得済み / 練習モード';document.getElementById('totalText').textContent=`所持コイン ${total}`;if(g){document.getElementById('resultMoves').textContent=g.moves;document.getElementById('resultTime').textContent=timeText(g.elapsedSec);document.getElementById('resultPar').textContent=g.par;document.getElementById('resultStars').textContent='★'.repeat(g.stars)+'☆'.repeat(3-g.stars);document.getElementById('resultStars').setAttribute('aria-label',`${g.stars}つ星`);document.getElementById('resultNote').textContent=g.stars===3?'道具なしで、手数の目安以内。お見事。':g.stars===2?'道具なしでクリア。次は手数に挑戦。':'ヒントや追加ビンを使っても、揃えたことが大切。';document.getElementById('nextBtn').textContent=g.mode==='campaign'?'次のステージへ →':'色の旅に戻る →'}document.getElementById('clearModal').classList.remove('hidden')}
   hideClear(){document.getElementById('clearModal').classList.add('hidden')}
   settingsUI(){
     const s=this.settings.values,ss=document.getElementById('soundBtn'),sv=document.getElementById('vibBtn');ss.textContent=s.sound?'ON':'OFF';ss.className='toggle'+(s.sound?' on':'');sv.textContent=s.vibration?'ON':'OFF';sv.className='toggle'+(s.vibration?' on':'');
     document.querySelectorAll('#themeGroup .choice').forEach(b=>b.classList.toggle('on',b.dataset.v===s.theme));document.querySelectorAll('#speedGroup .choice').forEach(b=>b.classList.toggle('on',b.dataset.v===s.speed))
+    for(const key of ['labels','motion']){const button=document.getElementById(`${key}Btn`);button.textContent=s[key]?'ON':'OFF';button.className='toggle'+(s[key]?' on':'');button.setAttribute('aria-pressed',String(s[key]))}
+    ss.setAttribute('aria-pressed',String(s.sound));sv.setAttribute('aria-pressed',String(s.vibration));
+  }
+  journey(g){
+    const completed=[...g.completedStages].filter(n=>n<=20),stars=completed.reduce((sum,n)=>sum+(g.records[`c:${n}`]?.stars||1),0);document.getElementById('journeySummary').textContent=`${completed.length} / 20 クリア　·　${stars} / 60 ★`;
+    const list=document.getElementById('stageList');list.innerHTML='';const chapters=['はじめの一滴','色が重なる','流れを読む','最後のひとしずく'];
+    for(let c=0;c<4;c++){const section=document.createElement('section');section.className='chapter';const heading=document.createElement('div');heading.className='chapterHead';heading.textContent=`0${c+1}　${chapters[c]}　/　${StageManager.label(StageManager.difficulty(c*5+1))}`;const row=document.createElement('div');row.className='stageTiles';for(let i=1;i<=5;i++){const level=c*5+i,unlocked=level===1||g.completedStages.has(level)||g.completedStages.has(level-1)||(g.mode==='campaign'&&level===g.level);const button=document.createElement('button');button.className='stageTile'+(g.mode==='campaign'&&g.level===level?' current':'');button.dataset.level=level;button.disabled=!unlocked;button.setAttribute('aria-label',unlocked?`Stage ${level}${g.completedStages.has(level)?' クリア済み':''}`:`Stage ${level} 未解放`);const number=document.createElement('span');number.textContent=unlocked?level:'·';const score=document.createElement('small');score.textContent=g.completedStages.has(level)?'★'.repeat(g.records[`c:${level}`]?.stars||1):unlocked?'PLAY':'LOCKED';button.append(number,score);row.appendChild(button)}section.append(heading,row);list.appendChild(section)}
+    document.getElementById('dailyLabel').textContent=g.dailyCompleted.has(StageManager.today())?'今日はクリア済み · 再挑戦できます':'毎日ひとつ、新しい色。初回 +20';
   }
 }
 
 class App{
-  constructor(){this.storage=new StorageManager();this.settings=new SettingsManager(this.storage);this.sound=new SoundManager(this.settings);this.anim=new AnimationManager(this.settings);this.renderer=new Renderer(this.settings);this.hints=new HintManager();this.state=null;this.busy=false;this.clearTimer=null}
+  constructor(){this.storage=new StorageManager();this.settings=new SettingsManager(this.storage);this.sound=new SoundManager(this.settings);this.anim=new AnimationManager(this.settings);this.renderer=new Renderer(this.settings);this.hints=new HintManager();this.state=null;this.busy=false;this.clearTimer=null;this.clockTimer=null;this.confirmAction=null;this.lastHint=null;this.focusReturn=null;this.initialized=false;this.lastTick=Date.now();this.timeRemainder=0}
   init(){
+    if(this.initialized)return;this.initialized=true;
     this.makeStars();const saved=this.storage.load();try{this.state=saved?GameState.fromSaved(saved):null}catch(e){console.warn('Invalid save discarded',e);this.state=null}
     if(!this.state){const st=new StageManager().load(1);this.state=new GameState(st)}
-    this.bind();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save();
-    if(this.state.stageCleared)this.renderer.showClear(0,this.state.coins);else this.checkWin()
+    this.bind();this.renderer.icons();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save();
+    if(this.state.stageCleared)this.renderer.showClear(0,this.state.coins,this.state);else{this.checkWin();if(!this.settings.values.helpSeen)this.openModal('helpModal')}
+    this.clockTimer=setInterval(()=>this.tick(),1000);
   }
   makeStars(){const e=document.getElementById('stars');e.innerHTML='';for(let i=0;i<55;i++){const s=document.createElement('i');s.className='star';s.style.left=`${Math.random()*100}%`;s.style.top=`${Math.random()*100}%`;s.style.setProperty('--s',`${.7+Math.random()*1.9}px`);s.style.setProperty('--t',`${3+Math.random()*6}s`);s.style.setProperty('--d',`${Math.random()*-6}s`);e.appendChild(s)}}
   bind(){
     document.getElementById('grid').addEventListener('click',e=>{const b=e.target.closest('.bottle');if(b)this.tap(+b.dataset.i)});
     const on=(id,fn)=>document.getElementById(id).addEventListener('click',fn);
     on('undoBtn',()=>this.undo());on('restartBtn',()=>this.restart());on('hintBtn',()=>this.hint());on('extraBtn',()=>this.extra());on('settingsBtn',()=>this.openSettings());on('closeSettingsBtn',()=>this.closeSettings());on('nextBtn',()=>this.next());on('randomBtn',()=>this.random());on('resetBtn',()=>this.reset());
+    on('journeyBtn',()=>this.openJourney());on('clearJourneyBtn',()=>this.openJourney());on('closeJourneyBtn',()=>this.closeModal('journeyModal'));on('helpBtn',()=>this.openModal('helpModal'));on('settingsHelpBtn',()=>{this.closeSettings();this.openModal('helpModal')});on('closeHelpBtn',()=>{this.settings.set('helpSeen',true);this.closeModal('helpModal')});
+    on('dailyBtn',()=>this.daily());on('practiceBtn',()=>this.random());on('labelsBtn',()=>{this.settings.set('labels',!this.settings.values.labels);this.renderer.settingsUI()});on('motionBtn',()=>{this.settings.set('motion',!this.settings.values.motion);this.renderer.settingsUI()});
+    on('confirmYesBtn',()=>{const action=this.confirmAction;this.confirmAction=null;this.closeModal('confirmModal');if(action)action()});on('confirmNoBtn',()=>{this.confirmAction=null;this.closeModal('confirmModal')});
+    document.getElementById('stageList').addEventListener('click',e=>{const button=e.target.closest('[data-level]');if(button&&!button.disabled)this.selectStage(Number(button.dataset.level))});
     on('soundBtn',()=>{this.settings.set('sound',!this.settings.values.sound);this.renderer.settingsUI()});on('vibBtn',()=>{this.settings.set('vibration',!this.settings.values.vibration);this.renderer.settingsUI()});
     document.querySelectorAll('#themeGroup .choice').forEach(b=>b.addEventListener('click',()=>{this.settings.set('theme',b.dataset.v);this.renderer.settingsUI()}));
     document.querySelectorAll('#speedGroup .choice').forEach(b=>b.addEventListener('click',()=>{this.settings.set('speed',b.dataset.v);this.renderer.settingsUI()}));
-    document.getElementById('settingsModal').addEventListener('click',e=>{if(e.target.id==='settingsModal')this.closeSettings()})
+    for(const id of ['settingsModal','journeyModal'])document.getElementById(id).addEventListener('click',e=>{if(e.target.id===id)this.closeModal(id)});
+    document.addEventListener('keydown',e=>this.key(e));document.addEventListener('visibilitychange',()=>{this.lastTick=Date.now();this.save()});window.addEventListener('pagehide',()=>this.save())
   }
-  save(){this.storage.save(this.state)}
-  cancelClear(){clearTimeout(this.clearTimer);this.clearTimer=null;this.renderer.hideClear();this.renderer.clearHint()}
+  save(){const ok=this.storage.save(this.state);document.getElementById('saveStatus').textContent=ok?'端末内に自動保存 · 外部通信なし':'このブラウザでは保存できません · 画面を閉じると進行が失われます';return ok}
+  modal(){const all=document.querySelectorAll('.modalBack:not(.hidden)');return all.length?all[all.length-1]:null}
+  openModal(id){if(this.busy)return;this.focusReturn=document.activeElement;const modal=document.getElementById(id);modal.classList.remove('hidden');modal.querySelector(id==='confirmModal'?'#confirmNoBtn':'button:not(:disabled)')?.focus();this.lastTick=Date.now()}
+  closeModal(id){document.getElementById(id).classList.add('hidden');this.focusReturn?.focus?.();this.lastTick=Date.now();if(id==='journeyModal'&&this.state.stageCleared)this.renderer.showClear(0,this.state.coins,this.state)}
+  key(e){
+    const modal=this.modal();if(!modal)return;
+    if(e.key==='Escape'){if(modal.id==='settingsModal'||modal.id==='journeyModal')this.closeModal(modal.id);if(modal.id==='confirmModal'){this.confirmAction=null;this.closeModal(modal.id)}return}
+    if(e.key==='Tab'){const buttons=[...modal.querySelectorAll('button:not(:disabled)')];if(!buttons.length)return;const first=buttons[0],last=buttons[buttons.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+  }
+  tick(){const now=Date.now(),delta=Math.max(0,Math.min(2000,now-this.lastTick));this.lastTick=now;if(document.hidden||this.busy||this.state.stageCleared||this.modal()||!this.state.moves){this.timeRemainder=0;return}this.timeRemainder+=delta;const seconds=Math.floor(this.timeRemainder/1000);this.timeRemainder%=1000;if(!seconds)return;this.state.elapsedSec+=seconds;this.renderer.metrics(this.state);if(this.state.elapsedSec%10===0)this.save()}
+  ask(title,text,action,label='やり直す'){this.confirmAction=action;document.getElementById('confirmHeading').textContent=title;document.getElementById('confirmText').textContent=text;document.getElementById('confirmYesBtn').textContent=label;this.openModal('confirmModal')}
+  cancelClear(){clearTimeout(this.clearTimer);this.clearTimer=null;this.renderer.hideClear();this.renderer.clearHint();this.lastHint=null}
   async tap(i){
-    if(this.busy||this.state.stageCleared||!this.state.bottles[i])return;this.renderer.clearHint();
+    if(this.busy||this.modal()||this.state.stageCleared||!this.state.bottles[i])return;this.renderer.clearHint();
     if(this.state.selected===null){if(this.state.bottles[i].empty){this.sound.play('fail');await this.anim.shake(this.renderer.el(i));return}this.state.selected=i;this.sound.play('select');this.sound.vibrate(12);this.renderer.render(this.state);return}
     const from=this.state.selected;if(from===i){this.state.selected=null;this.sound.play('select');this.renderer.render(this.state);return}
-    if(!this.state.canMove(from,i)){this.sound.play('fail');this.sound.vibrate([28,18,28]);await this.anim.shake(this.renderer.el(i));return}
-    const fromEl=this.renderer.el(from),toEl=this.renderer.el(i),color=this.state.bottles[from].top;this.state.move(from,i);this.busy=true;this.sound.play('pour');this.sound.vibrate(20);
+    if(!this.state.canMove(from,i)){if(!this.state.bottles[i].empty){this.state.selected=i;this.sound.play('select');this.renderer.render(this.state);return}this.sound.play('fail');this.sound.vibrate([28,18,28]);await this.anim.shake(this.renderer.el(i));this.renderer.toast('同じ色の上か、空ビンへ移せます');return}
+    const fromEl=this.renderer.el(from),toEl=this.renderer.el(i),color=this.state.bottles[from].top;this.state.move(from,i);this.busy=true;this.lastHint=null;this.save();this.sound.play('pour');this.sound.vibrate(20);
     try{await this.anim.pour(fromEl,toEl,color)}catch(e){console.warn('Pour animation failed',e)}finally{this.busy=false;this.renderer.render(this.state);this.save();this.checkWin()}
   }
   undo(){if(this.busy)return;if(!this.state.undo()){this.renderer.toast('戻れる手がありません');return}this.cancelClear();this.sound.play('select');this.renderer.render(this.state);this.save()}
-  restart(){if(this.busy)return;this.cancelClear();this.state.restart();this.sound.play('select');this.renderer.render(this.state);this.anim.stageEnter();this.save()}
-  hint(){if(this.busy||this.state.stageCleared)return;const h=this.hints.find(this.state);if(!h){this.sound.play('fail');this.renderer.toast(this.state.coins<K.HINT_COST?'コインが足りません':'ヒントが見つかりません');return}if(!this.state.useHint())return;this.sound.play('coin');this.renderer.render(this.state);this.renderer.hint(h.from,h.to);this.save()}
+  restart(){if(this.busy)return;const restart=()=>{this.cancelClear();this.state.restart();this.sound.play('select');this.renderer.render(this.state);this.anim.stageEnter();this.lastTick=Date.now();this.save()};if(this.state.moves||this.state.hintsUsed||this.state.extraUsed){this.ask('このステージをやり直す？','手数と盤面を最初に戻します。追加ビンは消え、購入に使ったコインは返却されません。',restart)}else restart()}
+  async hint(){
+    if(this.busy||this.state.stageCleared)return;const state=this.state,board=state.bottles.map(b=>b.toJSON()),key=StageManager.key(board);
+    if(this.lastHint?.key===key){this.renderer.hint(this.lastHint.move.from,this.lastHint.move.to);this.renderer.toast('同じ盤面のヒントは再表示無料です');return}
+    if(state.coins<K.HINT_COST){this.renderer.toast('コインが足りません');return}
+    this.busy=true;document.getElementById('hintBtn').disabled=true;document.getElementById('coachText').textContent='色の流れを考えています…';
+    try{
+      const result=await SolutionPlanner.solve(board);let path=result.path;
+      if(!path?.length&&result.status==='limit')path=SolutionPlanner.proof(state);
+      if(this.state!==state)return;
+      if(!path?.length){this.renderer.toast(result.status==='deadend'?'この盤面は解けません。「戻す」で前の盤面へ。':'探索の上限に達しました。コインは消費していません。');return}
+      const move=path[0];if(!state.canMove(move.from,move.to)||!state.useHint())return;
+      this.sound.play('coin');this.renderer.render(state);this.renderer.hint(move.from,move.to);this.lastHint={key,move};document.getElementById('coachText').textContent=`解答への一手 · ビン ${move.from+1} → ${move.to+1}`;this.save()
+    }catch(e){console.warn('Hint search failed',e);this.renderer.toast('ヒントを再試行してください。コインは消費していません。')}finally{this.busy=false;document.getElementById('hintBtn').disabled=state.stageCleared||state.coins<K.HINT_COST}
+  }
   extra(){if(this.busy||this.state.stageCleared)return;const r=this.state.addExtra();if(!r.ok){this.sound.play('fail');this.renderer.toast(r.msg);return}this.sound.play('coin');this.renderer.render(this.state);this.save()}
   checkWin(){
     const state=this.state,reward=state.claimClear();if(reward===null)return;
     this.renderer.render(state);this.sound.play('clear');this.sound.vibrate([70,35,70,35,140]);this.anim.confetti();this.save();
-    clearTimeout(this.clearTimer);this.clearTimer=setTimeout(()=>{this.clearTimer=null;if(this.state===state&&state.stageCleared)this.renderer.showClear(reward,state.coins)},420)
+    clearTimeout(this.clearTimer);this.clearTimer=setTimeout(()=>{this.clearTimer=null;if(this.state===state&&state.stageCleared){this.renderer.showClear(reward,state.coins,state);document.getElementById('nextBtn').focus()}},420)
   }
-  next(){if(this.busy||!this.state.stageCleared)return;const stage=new StageManager().load(this.state.level+1),coins=this.state.coins,completed=[...this.state.completedStages],bonus=this.state.campaignBonusClaimed;this.cancelClear();this.state=new GameState(stage,{coins,completedStages:completed,campaignBonusClaimed:bonus});this.renderer.render(this.state);this.anim.stageEnter();this.save()}
-  random(){if(this.busy)return;const diff=this.state.difficulty,stage=new StageManager().random(diff);if(!stage){this.renderer.toast('ステージの生成に失敗しました');return}stage.level=this.state.level;const coins=this.state.coins,completed=[...this.state.completedStages],bonus=this.state.campaignBonusClaimed;this.cancelClear();this.closeSettings();this.state=new GameState(stage,{coins,completedStages:completed,campaignBonusClaimed:bonus});this.renderer.render(this.state);this.anim.stageEnter();this.save()}
-  openSettings(){if(this.busy)return;this.renderer.settingsUI();document.getElementById('settingsModal').classList.remove('hidden');this.sound.play('select')}
-  closeSettings(){document.getElementById('settingsModal').classList.add('hidden')}
-  reset(){if(this.busy||!confirm('保存データと設定をすべて初期化しますか？'))return;this.cancelClear();this.storage.clearAll();this.settings.reset();const st=new StageManager().load(1);this.state=new GameState(st);this.closeSettings();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save()}
+  carry(){return{coins:this.state.coins,completedStages:[...this.state.completedStages],campaignBonusClaimed:this.state.campaignBonusClaimed,records:this.state.records,dailyCompleted:[...this.state.dailyCompleted]}}
+  changeStage(stage){const carry=this.carry();this.cancelClear();for(const id of ['settingsModal','journeyModal','helpModal'])document.getElementById(id).classList.add('hidden');this.state=new GameState(stage,carry);this.renderer.render(this.state);this.anim.stageEnter();this.lastTick=Date.now();this.save()}
+  next(){if(this.busy||!this.state.stageCleared)return;if(this.state.mode!=='campaign'){this.openJourney();return}try{this.changeStage(new StageManager().load(this.state.level+1))}catch(e){console.warn(e);this.renderer.toast('ステージを読み込めません。再試行してください。')}}
+  openJourney(){if(this.busy)return;clearTimeout(this.clearTimer);this.clearTimer=null;this.renderer.hideClear();this.closeSettings();this.renderer.journey(this.state);this.openModal('journeyModal')}
+  selectStage(level){if(this.busy||!Number.isInteger(level)||level<1||level>20||!(level===1||this.state.completedStages.has(level)||this.state.completedStages.has(level-1)||(this.state.mode==='campaign'&&level===this.state.level)))return;this.switchSafely(()=>new StageManager().load(level))}
+  switchSafely(make){const change=()=>{try{this.changeStage(make())}catch(e){console.warn('Stage load failed',e);this.renderer.toast('ステージを読み込めません。再試行してください。')}};if(!this.state.stageCleared&&(this.state.moves||this.state.extraCount||this.state.hintsUsed)){this.ask('別のパズルへ移動する？','現在の盤面は切り替わります。購入したコインは返却されません。記録とクリア状況は残ります。',change,'移動する')}else change()}
+  random(){if(this.busy)return;this.switchSafely(()=>{const stage=new StageManager().random(this.state.difficulty);if(!stage)throw new Error('Random generation failed');return{...stage,level:this.state.level,mode:'practice'}})}
+  daily(){if(this.busy)return;this.switchSafely(()=>new StageManager().daily())}
+  openSettings(){if(this.busy)return;this.renderer.settingsUI();this.openModal('settingsModal');this.sound.play('select')}
+  closeSettings(){this.closeModal('settingsModal')}
+  reset(){if(this.busy)return;this.ask('保存データをすべて初期化？','コイン・クリア記録・星・設定が消えます。この操作は取り消せません。',()=>{this.cancelClear();this.storage.clearAll();this.settings.reset();this.state=new GameState(new StageManager().load(1));for(const id of ['settingsModal','journeyModal'])document.getElementById(id).classList.add('hidden');this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save();this.openModal('helpModal')},'初期化する')}
 }
 document.addEventListener('DOMContentLoaded',()=>new App().init(),{once:true});
 })();

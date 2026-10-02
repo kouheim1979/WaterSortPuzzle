@@ -33,6 +33,25 @@ jobs:
       - name: Fixed stages and game regression tests
         run: node .github/scripts/validate.cjs
 
+      - name: Install browser test tools (CI only)
+        run: |
+          npm install --no-save --prefix "$RUNNER_TEMP/watersort-browser" playwright@1.58.2
+          node "$RUNNER_TEMP/watersort-browser/node_modules/playwright/cli.js" install --with-deps chromium webkit
+
+      - name: Chromium and WebKit mobile/desktop gameplay checks
+        env:
+          PLAYWRIGHT_MODULE_PATH: ${{ runner.temp }}/watersort-browser/node_modules/playwright
+        run: node .github/scripts/browser-check.cjs
+
+      - name: Save browser verification screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-verification
+          path: _browser-artifacts
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Prepare verified static site
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: |
