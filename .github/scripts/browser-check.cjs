@@ -49,10 +49,12 @@ async function verifySession(session){
 async function playRoute(page, route){
   let moves = (await saved(page)).moves;
   for(const move of route){
+    if((await saved(page)).stageCleared)break; // Existing saves may contain a harmless solved-state tail.
     await page.locator(`.bottle[data-i="${move.from}"]`).click();
     await page.locator(`.bottle[data-i="${move.to}"]`).click();
     moves++;
-    await until(page, ({key,moves}) => JSON.parse(localStorage.getItem(key)).moves===moves, {key:K.SAVE_KEY,moves});
+    try{await until(page, ({key,moves}) => JSON.parse(localStorage.getItem(key)).moves===moves, {key:K.SAVE_KEY,moves})}
+    catch(error){await page.screenshot({path:path.join(outputs,'failed-route.png')});throw new Error(`Route stalled at ${JSON.stringify(move)}; state=${JSON.stringify(await saved(page))}`,{cause:error})}
   }
   await page.locator('#clearModal').waitFor({state:'visible'});
 }

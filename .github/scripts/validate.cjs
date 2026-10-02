@@ -42,6 +42,7 @@ const stages = [];
 for (let level = 1; level <= 20; level++) {
   const stage = new StageManager().load(level);
   assert.equal(StageManager.validate(stage).ok, true, `Stage ${level}`);
+  assert.equal(StageManager.validate(stage).solvedAt, stage.solution.length, 'The proof ends at the first clear');
   const cfg = StageManager.config(StageManager.difficulty(level));
   assert.equal(stage.bottles.length, cfg.colors + cfg.empty);
   assert.equal(stage.bottles.filter(b => !b.length).length, cfg.empty);
@@ -63,9 +64,10 @@ assert.equal(StageManager.validateAllFixedStages(), true);
 console.log('PASS Stage 1–20: mixed boards, exact counts, legal gameplay solutions');
 
 for (const diff of Object.keys(K.DIFF)) {
-  for (const seed of [1, 20260908, 0xffffffff]) {
+  for (const seed of [1, 2, 20260908, 0xffffffff]) {
     const stage = StageManager.buildRandom(diff, seed);
     assert.ok(stage && StageManager.validate(stage).ok, `Random ${diff}, seed ${seed}`);
+    assert.equal(StageManager.validate(stage).solvedAt, stage.solution.length, 'Random proof has no post-clear moves');
   }
 }
 assert.equal(StageManager.validate({ ...stages[0], solution: undefined }).ok, false);

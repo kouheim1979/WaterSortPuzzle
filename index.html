@@ -412,8 +412,8 @@ class StageManager{
       if(allowed.some(c=>counts[c]!==K.CAP))return{ok:false,reason:'color count'};
       if(this.solved(b))return{ok:false,reason:'already solved'};
       if(!Array.isArray(stage.solution)||!stage.solution.length)return{ok:false,reason:'solution missing'};
-      const cur=b.map(x=>[...x]);for(const m of stage.solution){if(!m||!Number.isInteger(m.from)||!Number.isInteger(m.to)||!Number.isInteger(m.count)||!this.canMove(cur,m.from,m.to))return{ok:false,reason:'solution illegal'};const n=this.moveArray(cur,m.from,m.to);if(n!==m.count)return{ok:false,reason:'solution count'}}if(!this.solved(cur))return{ok:false,reason:'solution incomplete'};
-      return{ok:true}
+      const cur=b.map(x=>[...x]);let steps=0,solvedAt=0;for(const m of stage.solution){if(!m||!Number.isInteger(m.from)||!Number.isInteger(m.to)||!Number.isInteger(m.count)||!this.canMove(cur,m.from,m.to))return{ok:false,reason:'solution illegal'};const n=this.moveArray(cur,m.from,m.to);if(n!==m.count)return{ok:false,reason:'solution count'};steps++;if(!solvedAt&&this.solved(cur))solvedAt=steps}if(!this.solved(cur))return{ok:false,reason:'solution incomplete'};
+      return{ok:true,solvedAt}
     }catch(e){return{ok:false,reason:String(e)}}
   }
   static validateAllFixedStages(){let ok=true;FIXED_SEEDS.forEach((seed,i)=>{const level=i+1,d=this.difficulty(level),stage=this.buildRandom(d,seed),v=stage?this.validate(stage):{ok:false,reason:'generation failed'};if(!v.ok){ok=false;console.error('Invalid fixed stage:',level,v.reason)}});if(ok)console.info('All fixed stages validated successfully.');return ok}
@@ -441,7 +441,7 @@ class StageManager{
         if(!opts.length)break;opts.sort((a,z)=>z.score-a.score);const pick=opts[rng.int(Math.min(5,opts.length))];b=pick.nb;seen.add(pick.key);steps.push({fi:pick.fi,ti:pick.ti,count:pick.count});prev=pick;
         if(b.filter(x=>!x.length).length===cfg.empty&&!this.solved(b)&&this.mixed(b)>=cfg.minMixed){
           const solution=[...steps].reverse().map(m=>({from:m.ti,to:m.fi,count:m.count}));const candidate={difficulty:diff,bottles:b.map(x=>[...x]),solution};
-          const v=this.validate(candidate);if(v.ok){const spread=K.COLORS.slice(0,cfg.colors).reduce((n,c)=>n+b.filter(x=>x.includes(c)).length,0),score=this.mixed(b)*20+spread*2+Math.min(steps.length,cfg.target);if(!best||score>best.score)best={...candidate,score}}
+          const v=this.validate(candidate);if(v.ok){candidate.solution=solution.slice(0,v.solvedAt);const spread=K.COLORS.slice(0,cfg.colors).reduce((n,c)=>n+b.filter(x=>x.includes(c)).length,0),score=this.mixed(b)*20+spread*2+Math.min(steps.length,cfg.target);if(!best||score>best.score)best={...candidate,score}}
         }
       }
     }
