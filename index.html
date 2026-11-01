@@ -272,6 +272,59 @@ body[data-motion="false"] *,body[data-motion="false"] *::before,body[data-motion
 @media(max-height:730px){.masthead{padding-top:calc(9px + env(safe-area-inset-top,0px));padding-bottom:5px}#header{padding-bottom:9px}#runBar{padding:9px 0}#grid{--bh:142px}#grid.compact{--bh:121px}#grid.dense{--bh:105px}#game{padding:19px 8px 12px}}
 @media(min-width:560px){#app{max-width:660px}.masthead{padding-top:27px}#grid{--bw:73px;--bh:185px;gap:24px}#grid.compact{--bw:65px;--bh:163px}#grid.dense{--bw:60px;--bh:144px}#footer{padding-bottom:23px}.action{min-height:76px}}
 @media(max-height:500px) and (min-width:560px){.masthead{position:absolute;right:74px;top:10px;padding:0;z-index:3}.masthead .brandmark,.masthead>div{display:none}.masthead .navIcon{margin:0}#header{padding-top:10px;padding-right:124px}#settingsBtn{position:absolute;right:20px;top:10px}#grid{--bh:140px}#grid.compact,#grid.dense{--bh:115px}#coachBar{display:none}.action{min-height:52px}}
+
+/* Refined edition: board auto-fits the viewport, calmer chrome, clearer states. */
+#grid{grid-template-columns:repeat(var(--cols,3),var(--bw));gap:var(--gy,20px) var(--gx,18px);padding:6px 0 0}
+#game{padding:16px 12px 10px;align-items:center}
+.bottle{height:calc(var(--bh) + 31px);padding-bottom:18px}
+.bottle::before{bottom:16px}
+.bottleNum{bottom:0;line-height:14px;min-width:18px;padding:0 5px;border-radius:99px;font-size:10px;font-weight:700;color:#7f8aab;font-variant-numeric:tabular-nums;transition:color .2s,background .2s}
+.bottle.selected .bottleNum{color:#fff;background:color-mix(in srgb,var(--accent) 55%,transparent)}
+.bottle.done .bottleNum{color:#9fe8c8}
+.bottle.available .bottleNum{color:#bff3e4}
+.liquid::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.20),transparent 22%,rgba(255,255,255,.10) 42%,transparent 60%,rgba(0,0,0,.24))}
+.water{box-shadow:inset 0 5px 8px rgba(255,255,255,.12),inset 0 -6px 9px rgba(0,0,0,.12)}
+.water+.water{border-bottom:0}
+.water+.water::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(0,0,0,.14)}
+.bottle.done .vessel{border-color:rgba(190,240,220,.5)}
+.bottle.done .neck{border-color:rgba(190,240,220,.6);background:linear-gradient(180deg,var(--glow),transparent)}
+#stageTitle{font-size:27px}
+#runBar{padding:10px 0 11px;border-bottom:0}
+.completionTrack{height:4px;margin-top:10px;background:rgba(255,255,255,.08)}
+#completionFill{box-shadow:0 0 10px color-mix(in srgb,var(--accent) 60%,transparent)}
+#coachBar{background:transparent;border:1px solid var(--line);min-height:40px;padding:4px 6px 4px 14px}
+#helpBtn{width:32px;height:32px;min-width:32px}
+.action:not(:disabled):hover{background:rgba(255,255,255,.06);border-color:rgba(215,228,255,.26)}
+.action:disabled{opacity:.34}
+.action .ico{color:#d8d4f5}.action.special .ico{color:#cbbcff}
+.settingRow .label{display:flex;align-items:center;gap:10px;color:#cdd2e6}
+.settingRow .label .icon{width:18px;height:18px;color:var(--sub)}
+.toggle{position:relative;width:52px;min-height:30px;height:30px;padding:0;border-radius:99px;font-size:0;flex:none;background:rgba(255,255,255,.08);transition:background .2s,border-color .2s}
+.toggle::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#c6cbe0;box-shadow:0 2px 6px rgba(0,0,0,.3);transition:transform .2s cubic-bezier(.2,.8,.2,1),background .2s}
+.toggle.on::after{transform:translateX(22px);background:#fff}
+.choiceGroup{padding:3px;gap:2px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.choice{border:0;background:transparent;min-height:32px;border-radius:9px}
+.choice.on{border:0}
+.chapterHead{align-items:baseline;gap:8px;letter-spacing:.06em}
+.chapterHead b{font-weight:600;color:#cfd3ea}.chapterHead .cnum{color:var(--accent2);font-variant-numeric:tabular-nums}.chapterHead .cmeta{margin-left:auto;font-size:9px;letter-spacing:.12em}
+.stageTile{position:relative;font-weight:600;transition:transform .15s,background .2s,border-color .2s}
+.stageTile:not(:disabled):active{transform:scale(.94)}
+.stageTile small{font-size:9px;letter-spacing:.08em;color:var(--sub)}
+.stageTile.cleared{border-color:rgba(245,207,115,.22);background:linear-gradient(180deg,rgba(245,207,115,.08),rgba(255,255,255,.02))}
+.stageTile.cleared small{color:#f5cf73;letter-spacing:1px}
+.stageTile.current small{color:#e3dbff}
+.stageTile.current{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.stageTile.locked{border-style:dashed;border-color:rgba(255,255,255,.07)}
+.stageTile .icon{width:16px;height:16px;color:#4f5873}
+@media(max-height:700px){
+  .masthead{padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:4px}.brandnote{display:none}.brandmark{width:24px;height:30px}.brandmark .icon{width:22px;height:28px}
+  #header{padding-bottom:6px}#stageTitle{font-size:23px}#difficulty{margin-top:5px}
+  #runBar{padding:7px 0}.completionTrack{margin-top:7px}
+  #coachBar{min-height:36px;margin-bottom:5px}#footer{padding-top:7px;padding-bottom:calc(8px + var(--safe))}.action{min-height:56px;gap:1px}.action .ico{height:20px}.action .ico .icon{width:19px;height:19px}
+  #game{padding-top:10px;padding-bottom:6px}
+}
+@media(max-height:600px){#coachBar{display:none}#toast{bottom:calc(90px + var(--safe))}}
+@media(max-height:500px) and (min-width:560px){.completionTrack{display:none}#runBar{padding:6px 0}#game{padding-top:6px}.action{min-height:50px;flex-direction:row;gap:7px}}
 </style>
 </head>
 <body data-theme="Purple">
@@ -305,11 +358,11 @@ body[data-motion="false"] *,body[data-motion="false"] *::before,body[data-motion
 <div id="settingsModal" class="modalBack hidden" role="dialog" aria-modal="true" aria-labelledby="settingsHeading">
   <div class="card">
     <div class="eyebrow">MAKE IT YOURS</div><h2 id="settingsHeading" class="settingsTitle">自分のペースで。</h2>
-    <div class="settingRow"><span class="label">🔊 サウンド</span><button id="soundBtn" class="toggle on">ON</button></div>
-    <div class="settingRow"><span class="label">📳 バイブ</span><button id="vibBtn" class="toggle on">ON</button></div>
-    <div class="settingRow"><span class="label">🎨 テーマ</span><div id="themeGroup" class="choiceGroup"><button class="choice" data-v="Purple">Purple</button><button class="choice" data-v="Blue">Blue</button><button class="choice" data-v="Dark">Dark</button></div></div>
-    <div class="settingRow"><span class="label">⚡ 速度</span><div id="speedGroup" class="choiceGroup"><button class="choice" data-v="Slow">Slow</button><button class="choice" data-v="Normal">Normal</button><button class="choice" data-v="Fast">Fast</button></div></div>
-    <div class="settingRow"><span class="label">色の識別記号</span><button id="labelsBtn" class="toggle">OFF</button></div><div class="settingRow"><span class="label">アニメーション</span><button id="motionBtn" class="toggle on">ON</button></div>
+    <div class="settingRow"><span class="label"><span data-icon="sound" aria-hidden="true"></span>サウンド</span><button id="soundBtn" class="toggle on">ON</button></div>
+    <div class="settingRow"><span class="label"><span data-icon="vibrate" aria-hidden="true"></span>バイブ</span><button id="vibBtn" class="toggle on">ON</button></div>
+    <div class="settingRow"><span class="label"><span data-icon="palette" aria-hidden="true"></span>テーマ</span><div id="themeGroup" class="choiceGroup"><button class="choice" data-v="Purple">Purple</button><button class="choice" data-v="Blue">Blue</button><button class="choice" data-v="Dark">Dark</button></div></div>
+    <div class="settingRow"><span class="label"><span data-icon="speed" aria-hidden="true"></span>速度</span><div id="speedGroup" class="choiceGroup"><button class="choice" data-v="Slow">Slow</button><button class="choice" data-v="Normal">Normal</button><button class="choice" data-v="Fast">Fast</button></div></div>
+    <div class="settingRow"><span class="label"><span data-icon="tag" aria-hidden="true"></span>色の識別記号</span><button id="labelsBtn" class="toggle">OFF</button></div><div class="settingRow"><span class="label"><span data-icon="motion" aria-hidden="true"></span>アニメーション</span><button id="motionBtn" class="toggle on">ON</button></div>
     <div class="settingsActions"><button id="randomBtn" class="ghost">ランダム練習 · 報酬なし</button><button id="settingsHelpBtn" class="ghost">遊び方と星の条件</button><button id="resetBtn" class="ghost danger">保存データを初期化</button><button id="closeSettingsBtn" class="ghost">閉じる</button></div><p id="saveStatus" class="subtle" style="margin-top:14px;text-align:center">端末内に自動保存 · 外部通信なし</p>
   </div>
 </div>
@@ -338,7 +391,7 @@ const K=Object.freeze({
 });
 const FIXED_SEEDS=Object.freeze([42,137,256,512,1337,2048,3141,6283,9999,12345,54321,99999,11111,22222,33333,44444,55555,66666,77777,88888]);
 const copy=value=>JSON.parse(JSON.stringify(value));
-const ICONS=Object.freeze({drop:'<path d="M12 2C9 6 4 11 4 16a8 8 0 0 0 16 0c0-5-5-10-8-14Z"/><path d="M8 16a4 4 0 0 0 4 4"/>',grid:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',settings:'<path d="m9 3-1 3-3 1-2 3 2 2-1 3 2 3 3-1 2 3h3l1-3 3-1 2-3-2-2 1-3-2-3-3 1-2-3Z"/><circle cx="12" cy="12" r="3"/>',steps:'<path d="M4 17h4v-5h5V7h7M17 4l3 3-3 3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',undo:'<path d="m8 4-5 5 5 5M3 9h10a7 7 0 0 1 0 14"/>',restart:'<path d="M3 10a9 9 0 1 1 1 8M3 4v6h6"/>',hint:'<path d="M9 18h6M9 21h6M8 15a7 7 0 1 1 8 0l-1 3H9Z"/>',bottle:'<path d="M9 2h6v4l3 4v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10l3-4ZM6 13h12M12 15v5M10 17h4"/>',close:'<path d="m6 6 12 12M18 6 6 18"/>'});
+const ICONS=Object.freeze({drop:'<path d="M12 2C9 6 4 11 4 16a8 8 0 0 0 16 0c0-5-5-10-8-14Z"/><path d="M8 16a4 4 0 0 0 4 4"/>',grid:'<rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/>',settings:'<path d="m9 3-1 3-3 1-2 3 2 2-1 3 2 3 3-1 2 3h3l1-3 3-1 2-3-2-2 1-3-2-3-3 1-2-3Z"/><circle cx="12" cy="12" r="3"/>',steps:'<path d="M4 17h4v-5h5V7h7M17 4l3 3-3 3"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',undo:'<path d="m8 4-5 5 5 5M3 9h10a7 7 0 0 1 0 14"/>',restart:'<path d="M3 10a9 9 0 1 1 1 8M3 4v6h6"/>',hint:'<path d="M9 18h6M9 21h6M8 15a7 7 0 1 1 8 0l-1 3H9Z"/>',bottle:'<path d="M9 2h6v4l3 4v10a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V10l3-4ZM6 13h12M12 15v5M10 17h4"/>',close:'<path d="m6 6 12 12M18 6 6 18"/>',sound:'<path d="M4 10v6h4l5 4V6L8 10Z"/><path d="M17 9a5 5 0 0 1 0 8M19.5 6.5a8.5 8.5 0 0 1 0 13"/>',vibrate:'<rect x="8" y="3" width="8" height="20" rx="2"/><path d="M4 9v8M20 9v8"/>',palette:'<path d="M12 3a10 10 0 0 0 0 20c1.5 0 2-1 2-2 0-2 1-3 3-3h2a3 3 0 0 0 3-3c0-7-5-12-10-12Z"/><circle cx="7.5" cy="12" r="1.2"/><circle cx="10" cy="7.5" r="1.2"/><circle cx="15" cy="7.5" r="1.2"/>',speed:'<path d="M13 2 4 15h7l-1 9 9-13h-7Z"/>',tag:'<path d="M3 4v8l10 10 9-9L12 3H4Z"/><circle cx="8" cy="8.5" r="1.5"/>',motion:'<path d="M3 13c3-6 6-6 9 0s6 6 9 0"/>',lock:'<rect x="5" y="11" width="14" height="11" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'});
 const icon=name=>`<svg class="icon" viewBox="0 0 24 26" aria-hidden="true">${ICONS[name]||ICONS.drop}</svg>`;
 const timeText=seconds=>`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
 
@@ -636,11 +689,11 @@ class Renderer{
   metrics(g){document.getElementById('moveValue').textContent=g.moves;document.getElementById('timeValue').textContent=timeText(g.elapsedSec);const best=g.recordKey&&g.records[g.recordKey];document.getElementById('bestValue').textContent=best?`${best.moves}手`:'—';const total=StageManager.config(g.difficulty).colors,done=g.bottles.filter(b=>b.complete&&!b.empty).length;document.getElementById('completionFill').style.setProperty('width',`${done/total*100}%`)}
   render(g){
     document.getElementById('stageTitle').textContent=g.mode==='daily'?'Daily Puzzle':g.mode==='practice'?'Free Practice':`Stage ${g.level}`;const d=document.getElementById('difficulty');d.textContent=StageManager.label(g.difficulty)+(g.mode==='daily'?` · ${g.dailyDate.slice(5).replace('-','/')}`:g.mode==='practice'?' · 練習':'');d.className=g.difficulty;
-    document.getElementById('coinValue').textContent=g.coins;const grid=document.getElementById('grid'),n=g.bottles.length,cols=n<=6?3:4;grid.style.setProperty('--cols',cols);grid.className=n>=12?'dense':n>=9?'compact':'';
+    document.getElementById('coinValue').textContent=g.coins;const grid=document.getElementById('grid'),n=g.bottles.length;grid.className=n>=12?'dense':n>=9?'compact':'';
     const key=StageManager.key(g.bottles.map(b=>b.toJSON()));if(this.boardKey!==key){grid.innerHTML='';g.bottles.forEach((b,i)=>grid.appendChild(this.#bottle(b,i,g.selected===i)));this.boardKey=key}
     g.bottles.forEach((b,i)=>{const el=this.el(i);el?.classList.toggle('selected',g.selected===i);el?.classList.toggle('available',g.selected!==null&&g.canMove(g.selected,i));el?.setAttribute('aria-pressed',String(g.selected===i))});
     document.getElementById('undoBtn').disabled=!g.history.length;document.getElementById('hintBtn').disabled=g.stageCleared||g.coins<K.HINT_COST;document.getElementById('extraBtn').disabled=g.stageCleared||g.coins<K.EXTRA_COST||g.extraCount>=K.MAX_EXTRA
-    this.metrics(g);document.getElementById('coachText').textContent=g.stageCleared?'すべての色が揃いました。':g.selected!==null?`ビン ${g.selected+1} を選択中 · 淡く光るビンへ`:'移したいビン → 移し先をタップ';
+    this.fit();this.metrics(g);document.getElementById('coachText').textContent=g.stageCleared?'すべての色が揃いました。':g.selected!==null?`ビン ${g.selected+1} を選択中 · 淡く光るビンへ`:'移したいビン → 移し先をタップ';
     if(!g.stageCleared&&!SolutionPlanner.moves(g.bottles.map(b=>b.toJSON())).length)document.getElementById('coachText').textContent='動かせる手がありません。「戻す」か「空ビン追加」を。'
   }
   #bottle(b,i,selected){
@@ -649,6 +702,21 @@ class Renderer{
     const neck=document.createElement('div');neck.className='neck';const vessel=document.createElement('div');vessel.className='vessel';const lines=document.createElement('div');lines.className='levelLines';const liq=document.createElement('div');liq.className='liquid';
     const segs=b.segments;segs.forEach((c,idx)=>{const p=K.STYLE[c],w=document.createElement('div');w.className='water'+(idx===segs.length-1?' surface':'');w.style.setProperty('--i',idx);w.style.setProperty('--c1',p[0]);w.style.setProperty('--c2',p[1]);const mark=document.createElement('span');mark.className='colorMark';mark.textContent=String.fromCharCode(65+K.COLORS.indexOf(c));w.appendChild(mark);liq.appendChild(w)});
     const glass=document.createElement('div');glass.className='glass';vessel.append(lines,liq,glass);const num=document.createElement('span');num.className='bottleNum';num.textContent=i+1;btn.append(neck,vessel,num);return btn
+  }
+  // Size bottles to the space actually available so the whole board is visible
+  // without scrolling; only very crowded boards on tiny screens fall back to scrolling.
+  fit(){
+    const game=document.getElementById('game'),grid=document.getElementById('grid'),n=grid.children.length;if(!n||!game.clientWidth||typeof getComputedStyle!=='function')return;
+    const cs=getComputedStyle(game),W=game.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight)-6,H=game.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom)-10;
+    const EXTRA=31,GX=.3,GY=.28,MAX=innerWidth>=560?80:70,MIN=36;let best=null;
+    for(let rows=1;rows<=n;rows++){const cols=Math.ceil(n/rows);if(rows>1&&Math.ceil(n/(rows-1))===cols)continue;
+      const byW=W/(cols+GX*(cols-1)),byH=(H-rows*EXTRA)/(rows*2+GY*(rows-1)),bw=Math.min(MAX,byW,byH);
+      if(!best||bw>best.bw+.5)best={rows,cols,bw}}
+    let {cols,bw}=best,bh;
+    if(bw>=MIN){bh=Math.min(bw*2.55,(H-best.rows*EXTRA-GY*bw*(best.rows-1))/best.rows)}
+    else{cols=Math.max(3,Math.min(n,Math.floor((W+GX*42)/(42*(1+GX)))));bw=Math.min(56,W/(cols+GX*(cols-1)));const rows=Math.ceil(n/cols);bh=Math.min(bw*2.35,(H-rows*EXTRA-GY*bw*(rows-1))/rows)}
+    bw=Math.floor(bw);bh=Math.floor(Math.max(bh,bw*1.9));
+    const set=(k,v)=>grid.style.setProperty(k,v);set('--cols',cols);set('--bw',`${bw}px`);set('--bh',`${bh}px`);set('--gx',`${Math.floor(bw*GX)}px`);set('--gy',`${Math.floor(Math.max(12,bw*GY))}px`)
   }
   el(i){return document.querySelector(`.bottle[data-i="${i}"]`)}
   hint(from,to){this.clearHint();this.el(from)?.classList.add('hint-from');this.el(to)?.classList.add('hint-to');this.hintTimer=setTimeout(()=>this.clearHint(),5500)}
@@ -665,7 +733,7 @@ class Renderer{
   journey(g){
     const completed=[...g.completedStages].filter(n=>n<=20),stars=completed.reduce((sum,n)=>sum+(g.records[`c:${n}`]?.stars||1),0);document.getElementById('journeySummary').textContent=`${completed.length} / 20 クリア　·　${stars} / 60 ★`;
     const list=document.getElementById('stageList');list.innerHTML='';const chapters=['はじめの一滴','色が重なる','流れを読む','最後のひとしずく'];
-    for(let c=0;c<4;c++){const section=document.createElement('section');section.className='chapter';const heading=document.createElement('div');heading.className='chapterHead';heading.textContent=`0${c+1}　${chapters[c]}　/　${StageManager.label(StageManager.difficulty(c*5+1))}`;const row=document.createElement('div');row.className='stageTiles';for(let i=1;i<=5;i++){const level=c*5+i,unlocked=level===1||g.completedStages.has(level)||g.completedStages.has(level-1)||(g.mode==='campaign'&&level===g.level);const button=document.createElement('button');button.className='stageTile'+(g.mode==='campaign'&&g.level===level?' current':'');button.dataset.level=level;button.disabled=!unlocked;button.setAttribute('aria-label',unlocked?`Stage ${level}${g.completedStages.has(level)?' クリア済み':''}`:`Stage ${level} 未解放`);const number=document.createElement('span');number.textContent=unlocked?level:'·';const score=document.createElement('small');score.textContent=g.completedStages.has(level)?'★'.repeat(g.records[`c:${level}`]?.stars||1):unlocked?'PLAY':'LOCKED';button.append(number,score);row.appendChild(button)}section.append(heading,row);list.appendChild(section)}
+    for(let c=0;c<4;c++){const section=document.createElement('section');section.className='chapter';const heading=document.createElement('div');heading.className='chapterHead';const doneCount=[1,2,3,4,5].filter(i=>g.completedStages.has(c*5+i)).length;heading.innerHTML=`<span class="cnum">0${c+1}</span><b></b><span class="cmeta">${StageManager.label(StageManager.difficulty(c*5+1))} · ${doneCount}/5</span>`;heading.querySelector('b').textContent=chapters[c];const row=document.createElement('div');row.className='stageTiles';for(let i=1;i<=5;i++){const level=c*5+i,unlocked=level===1||g.completedStages.has(level)||g.completedStages.has(level-1)||(g.mode==='campaign'&&level===g.level);const button=document.createElement('button');const cleared=g.completedStages.has(level);button.className='stageTile'+(g.mode==='campaign'&&g.level===level?' current':'')+(cleared?' cleared':'')+(unlocked?'':' locked');button.dataset.level=level;button.disabled=!unlocked;button.setAttribute('aria-label',unlocked?`Stage ${level}${g.completedStages.has(level)?' クリア済み':''}`:`Stage ${level} 未解放`);const number=document.createElement('span');if(unlocked)number.textContent=level;else number.innerHTML=icon('lock');button.append(number);if(unlocked){const score=document.createElement('small');const st=g.records[`c:${level}`]?.stars||1;score.textContent=cleared?'★'.repeat(st)+'☆'.repeat(3-st):'PLAY';button.append(score)}row.appendChild(button)}section.append(heading,row);list.appendChild(section)}
     document.getElementById('dailyLabel').textContent=g.dailyCompleted.has(StageManager.today())?'今日はクリア済み · 再挑戦できます':'毎日ひとつ、新しい色。初回 +20';
   }
 }
@@ -679,6 +747,7 @@ class App{
     this.bind();this.renderer.icons();this.renderer.settingsUI();this.renderer.render(this.state);this.anim.stageEnter();this.save();
     if(this.state.stageCleared)this.renderer.showClear(0,this.state.coins,this.state);else{this.checkWin();if(!this.settings.values.helpSeen)this.openModal('helpModal')}
     this.clockTimer=setInterval(()=>this.tick(),1000);
+    const refit=()=>this.renderer.fit();if(typeof ResizeObserver==='function')new ResizeObserver(refit).observe(document.getElementById('game'));else if(typeof window!=='undefined'&&window.addEventListener)window.addEventListener('resize',refit);
   }
   makeStars(){const e=document.getElementById('stars');e.innerHTML='';for(let i=0;i<55;i++){const s=document.createElement('i');s.className='star';s.style.left=`${Math.random()*100}%`;s.style.top=`${Math.random()*100}%`;s.style.setProperty('--s',`${.7+Math.random()*1.9}px`);s.style.setProperty('--t',`${3+Math.random()*6}s`);s.style.setProperty('--d',`${Math.random()*-6}s`);e.appendChild(s)}}
   bind(){
