@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#090d24">
+<meta name="theme-color" content="#1f1940">
 <meta name="description" content="ガラス瓶の色水を揃える、静かなパズル。20ステージ、デイリーチャレンジ、記録と中断再開。広告・外部通信なし。">
 <title>Water Sort Puzzle</title>
 <style>
@@ -325,15 +325,116 @@ body[data-motion="false"] *,body[data-motion="false"] *::before,body[data-motion
 }
 @media(max-height:600px){#coachBar{display:none}#toast{bottom:calc(90px + var(--safe))}}
 @media(max-height:500px) and (min-width:560px){.completionTrack{display:none}#runBar{padding:6px 0}#game{padding-top:6px}.action{min-height:50px;flex-direction:row;gap:7px}}
+
+/* Casual edition: deep purple argyle room, round glass bottles, chunky 3D buttons. */
+:root{--room:#2b2354;--roomDark:#1f1940;--shelf:#3a2f72;--cream:#fff3d6;--creamEdge:#e9c27a;--btnTop:#c58cff;--btnBot:#8a48e6;--btnEdge:#5b2aa6;--pillTop:#62ccff;--pillBot:#2b86e6}
+body[data-theme="Blue"]{--room:#1d2c5c;--roomDark:#131d40;--shelf:#2a3f80;--btnTop:#7cc4ff;--btnBot:#3f7fe6;--btnEdge:#24509e}
+body[data-theme="Dark"]{--room:#1c1c26;--roomDark:#111117;--shelf:#2a2a38;--btnTop:#9a8fb8;--btnBot:#5f557d;--btnEdge:#3a3350}
+body{font-family:"Hiragino Maru Gothic ProN","Arial Rounded MT Bold","Hiragino Sans","Yu Gothic",-apple-system,sans-serif;background:var(--roomDark)}
+#stars,.masthead{display:none}
+#scene{background:
+  radial-gradient(ellipse 120% 80% at 50% 45%,transparent 40%,rgba(0,0,0,.45)),
+  conic-gradient(from 45deg,rgba(255,255,255,.035) 25%,transparent 0 50%,rgba(255,255,255,.035) 0 75%,transparent 0) 0 0/72px 72px,
+  var(--room)}
+#scene::before,#scene::after{display:none}
+#header{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:center;padding:calc(12px + env(safe-area-inset-top,0px)) 14px 12px;
+  background:linear-gradient(180deg,var(--roomDark),color-mix(in srgb,var(--roomDark) 70%,var(--room)));border-bottom:5px solid var(--shelf);box-shadow:0 6px 14px rgba(0,0,0,.3)}
+#coinPill{position:relative;height:34px;padding:0 14px 0 34px;margin-left:12px;border-radius:99px;font-size:16px;font-weight:900;color:#5b3a10;
+  background:linear-gradient(180deg,#fffaf0,var(--cream) 55%,#f2d9a2);border:2px solid var(--creamEdge);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.coinIcon{position:absolute;left:-14px;top:50%;width:40px;height:40px;transform:translateY(-50%);display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 30%,#fff3a0,#ffd43b 45%,#f0a000 80%);border:2px solid #fff1b0;box-shadow:0 3px 0 #b77400,0 4px 8px rgba(0,0,0,.3)}
+.coinIcon::after{content:"★";color:#fff7c9;font-size:20px;line-height:1;text-shadow:0 1px 0 #c98400}
+.stageBlock{justify-self:center;min-width:0;max-width:100%;text-align:center;padding:5px 18px 6px;border-radius:99px;
+  background:linear-gradient(180deg,#5a48a8,#3a2c7a);border:3px solid var(--creamEdge);box-shadow:inset 0 2px 0 rgba(255,255,255,.18),0 3px 0 rgba(0,0,0,.3)}
+#stageTitle{font-size:19px;font-weight:900;letter-spacing:0;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+#difficulty{margin-top:2px;padding:0;border:0;background:none!important;font-size:8px;letter-spacing:.16em}
+#settingsBtn,#header .navIcon{width:44px;height:44px;margin:0;border-radius:50%;display:grid;place-items:center;color:#fff;
+  background:radial-gradient(circle at 40% 30%,var(--btnTop),var(--btnBot) 75%);border:3px solid var(--creamEdge);box-shadow:0 3px 0 var(--btnEdge),0 5px 10px rgba(0,0,0,.3)}
+#settingsBtn .icon,#header .navIcon .icon{width:22px;height:22px;stroke-width:2.3}
+#settingsBtn:active,#header .navIcon:active{transform:translateY(2px);box-shadow:0 1px 0 var(--btnEdge)}
+#runBar{margin:10px 16px 0;padding:0;border:0}
+.runStats{justify-content:center;gap:8px}
+.runStat{padding:5px 12px;border-radius:99px;background:rgba(0,0,0,.25);color:#fff;font-weight:700;font-size:13px}
+.runStat small{color:#c9bff0}.runStat .icon{color:#c9bff0}
+.completionTrack{height:6px;margin:8px auto 0;max-width:260px;border-radius:99px;background:rgba(0,0,0,.3);box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+#completionFill{background:linear-gradient(90deg,#ffd43b,#ffb000);box-shadow:none;border-radius:99px}
+/* Round glass bottles */
+.bottle{filter:drop-shadow(0 8px 8px rgba(0,0,0,.35))}
+.bottle::before{display:none}
+.neck{width:58%;height:14px;margin-bottom:-5px;border:2px solid rgba(150,215,255,.75);border-radius:9px;
+  background:linear-gradient(180deg,rgba(210,240,255,.45),rgba(90,140,210,.3) 60%,rgba(40,70,140,.4));box-shadow:inset 0 2px 0 rgba(255,255,255,.4),0 2px 3px rgba(0,0,0,.3)}
+.neck::after{display:none}
+.vessel{--r:calc(var(--bw)*.3);border-radius:calc(var(--bw)*.44) calc(var(--bw)*.44) var(--r) var(--r);
+  border:2px solid rgba(120,210,255,.6);background:linear-gradient(90deg,rgba(255,255,255,.08),rgba(30,40,90,.25) 40%,rgba(10,15,40,.35));
+  box-shadow:0 0 8px rgba(90,200,255,.25),inset 0 0 0 1px rgba(255,255,255,.06)}
+.levelLines{display:none}
+.liquid{inset:calc(var(--bw)*.3) 2px 2px;overflow:visible;border-radius:0;clip-path:inset(-40px 0 0 0 round 0 0 calc(var(--r) - 3px) calc(var(--r) - 3px))}
+.liquid::after{background:linear-gradient(90deg,rgba(0,0,0,.16),transparent 20%,rgba(255,255,255,.12) 38%,transparent 55%,rgba(0,0,0,.2))}
+.water{background:color-mix(in srgb,var(--c1) 55%,var(--c2));box-shadow:none;--eh:calc(var(--bw)*.26)}
+.water+.water::after{display:none}
+.water.surface::before{left:0;right:0;top:calc(var(--eh) / -2);height:var(--eh);border-radius:50%;opacity:1;animation:none;
+  background:color-mix(in srgb,var(--c1) 80%,#fff);box-shadow:inset 0 -2px 3px rgba(0,0,0,.12)}
+.glass{border-radius:inherit;background:linear-gradient(90deg,rgba(255,255,255,.22),transparent 18%,transparent 78%,rgba(255,255,255,.08))}
+.glass::before{top:calc(var(--bw)*.22);left:16%;width:7%;min-width:4px;height:58%;background:linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,.12) 70%,transparent)}
+.glass::after{display:none}
+.bottle.selected .vessel{border-color:#fff;box-shadow:0 0 14px rgba(150,230,255,.6)}
+.bottle.selected .neck{border-color:#fff}
+.bottle.available .vessel{border-color:#7ff0d0;box-shadow:0 0 14px rgba(110,240,200,.45)}
+.bottle.done .vessel{border-color:color-mix(in srgb,var(--glow) 70%,#fff);box-shadow:0 0 16px var(--glow)}
+.bottle.done .neck{background:linear-gradient(180deg,#e7c28a,#a8743e);border-color:#f3d9a4}
+.bottleNum{color:rgba(220,210,255,.45);font-weight:800}
+.bottle.selected .bottleNum{background:var(--btnBot)}
+#coachBar{margin:0 16px 8px;min-height:36px;border:0;border-radius:99px;background:rgba(0,0,0,.25);color:#e6defc;font-weight:700}
+#helpBtn{background:linear-gradient(180deg,var(--pillTop),var(--pillBot));color:#fff;border:2px solid #cdeeff}
+/* Chunky footer buttons */
+#footer{gap:8px;padding:12px 14px calc(12px + var(--safe));border-top:4px solid color-mix(in srgb,var(--shelf) 70%,#fff 10%);
+  background:linear-gradient(180deg,var(--shelf),color-mix(in srgb,var(--shelf) 75%,#000))}
+.action,.action.special{min-height:auto;padding:0;gap:0;border:0;border-radius:0;background:none;box-shadow:none;justify-content:flex-start}
+.action:not(:disabled):hover{background:none}
+.action .ico{width:60px;height:56px;border-radius:17px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(180deg,var(--btnTop),var(--btnBot));border:2px solid rgba(255,255,255,.35);
+  box-shadow:0 5px 0 var(--btnEdge),inset 0 3px 0 rgba(255,255,255,.35),0 9px 12px rgba(0,0,0,.3);transition:transform .1s,box-shadow .1s}
+.action.special .ico{color:#fff}
+.action .ico .icon{width:30px;height:30px;stroke-width:2.6;filter:drop-shadow(0 2px 0 rgba(60,20,120,.5))}
+.action:active{transform:none;background:none}
+.action:active .ico{transform:translateY(4px);box-shadow:0 1px 0 var(--btnEdge),inset 0 3px 0 rgba(255,255,255,.35)}
+.action .lbl{position:relative;z-index:1;margin-top:-6px;padding:2px 10px;border-radius:99px;font-size:11px;font-weight:900;color:#fff;white-space:nowrap;
+  background:linear-gradient(180deg,var(--pillTop),var(--pillBot));border:2px solid #cdeeff;text-shadow:0 1px 0 rgba(0,40,100,.5)}
+.action .cost{position:absolute;top:-6px;right:calc(50% - 40px);min-height:0;padding:1px 6px;border-radius:99px;font-size:9px;font-weight:900;color:#5b3a10;
+  background:linear-gradient(180deg,#fff3a0,#ffc928);border:1.5px solid #fff;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+#undoBtn .cost,#restartBtn .cost{display:none}
+.action:disabled{opacity:.45;filter:grayscale(.6)}
+/* Playful cards */
+.modalBack{background:rgba(15,10,35,.72)}
+.card{background:linear-gradient(180deg,#4d3c96,#2d2262);border:3px solid var(--creamEdge);box-shadow:0 8px 0 rgba(0,0,0,.25),0 28px 60px rgba(0,0,0,.5)}
+.card h2,.clearTitle{color:#fff;font-weight:900;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+.eyebrow{color:#f3d9a4}
+.primary{border-radius:18px;font-size:15px;font-weight:900;color:#fff;text-shadow:0 2px 0 rgba(0,80,20,.45);
+  background:linear-gradient(180deg,#86ea6e,#3fb34a);border:2px solid rgba(255,255,255,.4);box-shadow:0 5px 0 #2a7d33,0 10px 18px rgba(0,0,0,.3)}
+.primary:active{transform:translateY(4px);box-shadow:0 1px 0 #2a7d33}
+.ghost{border-radius:14px;background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.15)}
+.clearIcon{color:#ffd43b;background:radial-gradient(circle,rgba(255,212,59,.25),rgba(255,212,59,.03));border-color:rgba(255,212,59,.4)}
+.resultStars{color:#ffd43b;text-shadow:0 2px 0 #b77400}
+.resultDetails>div{background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.1)}
+.stageTile{border-radius:16px;font-weight:900}
+.stageTile:not(:disabled){background:linear-gradient(180deg,var(--btnTop),var(--btnBot));border:2px solid rgba(255,255,255,.3);box-shadow:0 4px 0 var(--btnEdge);color:#fff}
+.stageTile.cleared{background:linear-gradient(180deg,#ffe27a,#f0a800);border-color:#fff3c0;box-shadow:0 4px 0 #a86f00;color:#5b3a10}
+.stageTile.cleared small{color:#7a4a00}.stageTile:not(:disabled) small{color:#fff}
+.stageTile.current{box-shadow:0 4px 0 var(--btnEdge),0 0 0 3px #fff}
+.toggle.on,.choice.on{background:linear-gradient(180deg,var(--pillTop),var(--pillBot));border-color:#cdeeff}
+@media(max-width:350px){#header{gap:6px;padding-left:10px;padding-right:10px}#coinPill{font-size:14px;padding-right:10px}.stageBlock{padding:4px 10px 5px}#stageTitle{font-size:16px}.action .ico{width:52px;height:50px}.action .lbl{font-size:10px;padding:2px 7px}}
+@media(max-height:700px){#header{padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px}#runBar{margin-top:7px}.runStat{padding:3px 10px}.completionTrack{margin-top:6px}#footer{padding-top:10px}.action .ico{height:48px;width:54px}.action .ico .icon{width:26px;height:26px}}
+@media(max-height:500px) and (min-width:560px){#header{padding:8px 20px 8px}#settingsBtn{position:static}.completionTrack{display:none}#runBar{margin-top:5px}.action{flex-direction:column;gap:0}.action .ico{height:42px;width:52px}.action .ico .icon{width:24px;height:24px}#footer{padding-top:8px;padding-bottom:8px}}
 </style>
 </head>
 <body data-theme="Purple">
 <div id="scene"></div><div id="stars"></div>
 <div id="app">
-  <div class="masthead"><span class="brandmark" data-icon="drop" aria-hidden="true"></span><div><div class="wordmark">WATER SORT</div><div class="brandnote">A QUIET COLOR RITUAL</div></div><button id="journeyBtn" class="navIcon" aria-label="ステージ一覧" data-icon="grid"></button></div>
+  <div class="masthead"><span class="brandmark" data-icon="drop" aria-hidden="true"></span><div><div class="wordmark">WATER SORT</div><div class="brandnote">A QUIET COLOR RITUAL</div></div></div>
   <header id="header">
-    <div class="stageBlock"><div id="stageTitle">Stage 1</div><div id="difficulty" class="easy">EASY</div></div>
     <div id="coinPill"><span class="coinIcon"></span><span id="coinValue">100</span></div>
+    <div class="stageBlock"><div id="stageTitle">Stage 1</div><div id="difficulty" class="easy">EASY</div></div>
+    <button id="journeyBtn" class="navIcon" aria-label="ステージ一覧" data-icon="grid"></button>
     <button id="settingsBtn" aria-label="設定" data-icon="settings"></button>
   </header>
   <section id="runBar" aria-label="プレイ記録"><div class="runStats"><div class="runStat"><span data-icon="steps" aria-hidden="true"></span><span id="moveValue">0</span><small>手</small></div><div class="runStat"><span data-icon="clock" aria-hidden="true"></span><span id="timeValue">0:00</span></div><div class="runStat"><small>BEST</small><span id="bestValue">—</span></div></div><div class="completionTrack"><div id="completionFill"></div></div></section>
@@ -342,8 +443,8 @@ body[data-motion="false"] *,body[data-motion="false"] *::before,body[data-motion
   <footer id="footer">
     <button id="undoBtn" class="action" aria-label="一手戻す"><span class="ico" data-icon="undo"></span><span class="lbl">戻す</span><span class="cost">無料</span></button>
     <button id="restartBtn" class="action" aria-label="ステージをやり直す"><span class="ico" data-icon="restart"></span><span class="lbl">やり直す</span><span class="cost">最初から</span></button>
-    <button id="hintBtn" class="action special"><span class="ico" data-icon="hint"></span><span class="lbl">ヒント</span><span class="cost">10 コイン</span></button>
-    <button id="extraBtn" class="action special"><span class="ico" data-icon="bottle"></span><span class="lbl">空ビン追加</span><span class="cost">20 コイン</span></button>
+    <button id="hintBtn" class="action special" aria-label="ヒント（10 コイン）"><span class="ico" data-icon="hint"></span><span class="lbl">ヒント</span><span class="cost">10 コイン</span></button>
+    <button id="extraBtn" class="action special" aria-label="空ビン追加（20 コイン）"><span class="ico" data-icon="bottle"></span><span class="lbl">空ビン追加</span><span class="cost">20 コイン</span></button>
   </footer>
 </div>
 <div id="toast" role="status" aria-live="polite"></div><div id="confetti" aria-hidden="true"></div>
