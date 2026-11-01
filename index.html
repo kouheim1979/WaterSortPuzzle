@@ -425,6 +425,14 @@ body{font-family:"Hiragino Maru Gothic ProN","Arial Rounded MT Bold","Hiragino S
 @media(max-width:350px){#header{gap:6px;padding-left:10px;padding-right:10px}#coinPill{font-size:14px;padding-right:10px}.stageBlock{padding:4px 10px 5px}#stageTitle{font-size:16px}.action .ico{width:52px;height:50px}.action .lbl{font-size:10px;padding:2px 7px}}
 @media(max-height:700px){#header{padding-top:calc(8px + env(safe-area-inset-top,0px));padding-bottom:8px}#runBar{margin-top:7px}.runStat{padding:3px 10px}.completionTrack{margin-top:6px}#footer{padding-top:10px}.action .ico{height:48px;width:54px}.action .ico .icon{width:26px;height:26px}}
 @media(max-height:500px) and (min-width:560px){#header{padding:8px 20px 8px}#settingsBtn{position:static}.completionTrack{display:none}#runBar{margin-top:5px}.action{flex-direction:column;gap:0}.action .ico{height:42px;width:52px}.action .ico .icon{width:24px;height:24px}#footer{padding-top:8px;padding-bottom:8px}}
+
+/* Elegant pour */
+.water{animation:none}
+.bottle{transition:transform .32s cubic-bezier(.3,.7,.2,1),filter .3s ease}
+.pourStream{position:fixed;z-index:100;pointer-events:none;border-radius:99px;
+  background:linear-gradient(90deg,var(--c2),color-mix(in srgb,var(--c1) 70%,#fff) 45%,var(--c1) 60%,var(--c2));
+  box-shadow:0 0 6px color-mix(in srgb,var(--c1) 60%,transparent)}
+.bottle.receiving .vessel{animation:none;border-color:rgba(200,240,255,.9)}
 </style>
 </head>
 <body data-theme="Purple">
@@ -762,19 +770,45 @@ class AnimationManager{
   constructor(settings){this.settings=settings}
   wait(ms){return new Promise(r=>setTimeout(r,ms))}
   async shake(el){if(!el)return;el.classList.remove('shake');void el.offsetWidth;el.classList.add('shake');await this.wait(430);el.classList.remove('shake')}
-  async pour(fromEl,toEl,color){
-    if(!this.settings.values.motion)return;
-    if(!fromEl||!toEl)return;const fr=fromEl.getBoundingClientRect(),tr=toEl.getBoundingClientRect(),dir=(tr.left+tr.width/2)>=(fr.left+fr.width/2)?1:-1;
-    const dx=(tr.left+tr.width/2)-(fr.left+fr.width/2)-dir*36,dy=(tr.top-fr.top)-18;
-    fromEl.style.setProperty('--px',`${dx}px`);fromEl.style.setProperty('--py',`${dy}px`);fromEl.style.setProperty('--tilt',`${dir*68}deg`);
-    fromEl.classList.add('pouring');toEl.classList.add('receiving');
-    const ms=this.settings.ms,streamDelay=Math.max(45,ms*.43);setTimeout(()=>this.stream(tr,color,dir,Math.max(120,ms*.45)),streamDelay);
-    await this.wait(ms+20);fromEl.classList.remove('pouring');toEl.classList.remove('receiving')
+  // Smooth pour: the bottle glides over the target and tilts around its mouth, a stream
+  // falls to the rising surface, and only the two liquids change (no board rebuild flash).
+  async pour(fromEl,toEl,color,n,fromLen,toLen){
+    if(!this.settings.values.motion||!fromEl||!toEl||typeof fromEl.animate!=='function')return;
+    const T=Math.round(this.settings.ms*3),w=fromEl.offsetWidth,dir=toEl.offsetLeft>=fromEl.offsetLeft?1:-1;
+    const tilt=dir*(68+(4-fromLen)*6),dx=toEl.offsetLeft-fromEl.offsetLeft-dir*w*.34,dy=toEl.offsetTop-fromEl.offsetTop-Math.max(12,w*.28);
+    const lift=fromEl.classList.contains('selected')?-14:0,ease='cubic-bezier(.45,.05,.25,1)';
+    fromEl.classList.remove('selected');fromEl.style.zIndex='30';fromEl.style.transformOrigin='50% 5px';toEl.classList.add('receiving');
+    const move=fromEl.animate([
+      {transform:`translate(0,${lift}px) rotate(0deg)`,easing:ease},
+      {transform:`translate(${dx}px,${dy}px) rotate(${tilt}deg)`,offset:.3},
+      {transform:`translate(${dx}px,${dy}px) rotate(${tilt}deg)`,offset:.74,easing:ease},
+      {transform:'translate(0,0) rotate(0deg)'}
+    ],{duration:T,fill:'forwards'});
+    const flowDur=T*.42;await this.wait(T*.3);
+    try{this.stream(toEl,color,dir,flowDur,toLen,n);this.transfer(fromEl,toEl,color,n,fromLen,toLen,flowDur)}catch(e){console.warn('Pour flow failed',e)}
+    try{await move.finished}catch{}
+    move.cancel();fromEl.style.zIndex='';fromEl.style.transformOrigin='';toEl.classList.remove('receiving')
   }
-  stream(targetRect,color,dir,duration){
-    const pair=K.STYLE[color]||['#fff','#aaa'];const e=document.createElement('div');e.className='pour-stream';
-    e.style.left=`${targetRect.left+targetRect.width/2-dir*17}px`;e.style.top=`${targetRect.top-23}px`;e.style.setProperty('--stream1',pair[0]);e.style.setProperty('--stream2',pair[1]);e.style.setProperty('--sr',`${dir*12}deg`);e.style.setProperty('--streamDur',`${duration}ms`);
-    document.body.appendChild(e);setTimeout(()=>e.remove(),duration+80)
+  transfer(fromEl,toEl,color,n,fromLen,toLen,dur){
+    const pair=K.STYLE[color]||['#fff','#aaa'],fl=fromEl.querySelector('.liquid'),tl=toEl.querySelector('.liquid'),flow='cubic-bezier(.35,0,.35,1)';
+    const mk=(bottom,h)=>{const d=document.createElement('div');d.className='water surface';d.style.setProperty('--c1',pair[0]);d.style.setProperty('--c2',pair[1]);d.style.bottom=`${bottom*25}%`;d.style.height=`${h*25}%`;return d};
+    const src=[...fl.querySelectorAll('.water')],rest=src.slice(0,src.length-n);src.slice(-n).forEach(e=>e.remove());rest.forEach(e=>e.classList.remove('surface'));
+    const out=mk(fromLen-n,n);fl.appendChild(out);
+    out.animate([{height:`${n*25}%`},{height:'0%'}],{duration:dur,easing:flow,fill:'forwards'}).finished.then(()=>{out.remove();rest[rest.length-1]?.classList.add('surface')}).catch(()=>{});
+    tl.querySelectorAll('.water').forEach(e=>e.classList.remove('surface'));const inn=mk(toLen,n);tl.appendChild(inn);
+    inn.animate([{height:'0%'},{height:`${n*25}%`}],{duration:dur,easing:flow,fill:'forwards'});
+  }
+  stream(toEl,color,dir,dur,toLen,n){
+    const pair=K.STYLE[color]||['#fff','#aaa'],r=toEl.getBoundingClientRect(),lq=toEl.querySelector('.liquid').getBoundingClientRect(),w=r.width,sw=Math.max(4,w*.13);
+    const top=r.top-Math.max(12,w*.28)+2,level=k=>lq.bottom-lq.height*k/4-top,e=document.createElement('div');e.className='pourStream';
+    e.style.left=`${r.left+w/2-dir*w*.1-sw/2}px`;e.style.top=`${top}px`;e.style.width=`${sw}px`;e.style.setProperty('--c1',pair[0]);e.style.setProperty('--c2',pair[1]);
+    document.body.appendChild(e);
+    e.animate([
+      {height:`${level(toLen)}px`,clipPath:'inset(0 0 100% 0 round 99px)'},
+      {height:`${level(toLen)}px`,clipPath:'inset(0 0 0 0 round 99px)',offset:.18},
+      {height:`${level(toLen+n)}px`,clipPath:'inset(0 0 0 0 round 99px)',offset:.82},
+      {height:`${level(toLen+n)}px`,clipPath:'inset(100% 0 0 0 round 99px)'}
+    ],{duration:dur,easing:'linear',fill:'forwards'}).finished.then(()=>e.remove(),()=>e.remove())
   }
   stageEnter(){const e=document.getElementById('game');e.classList.remove('stage-enter');void e.offsetWidth;e.classList.add('stage-enter')}
   confetti(){
@@ -882,8 +916,8 @@ class App{
     if(this.state.selected===null){if(this.state.bottles[i].empty){this.sound.play('fail');await this.anim.shake(this.renderer.el(i));return}this.state.selected=i;this.sound.play('select');this.sound.vibrate(12);this.renderer.render(this.state);return}
     const from=this.state.selected;if(from===i){this.state.selected=null;this.sound.play('select');this.renderer.render(this.state);return}
     if(!this.state.canMove(from,i)){if(!this.state.bottles[i].empty){this.state.selected=i;this.sound.play('select');this.renderer.render(this.state);return}this.sound.play('fail');this.sound.vibrate([28,18,28]);await this.anim.shake(this.renderer.el(i));this.renderer.toast('同じ色の上か、空ビンへ移せます');return}
-    const fromEl=this.renderer.el(from),toEl=this.renderer.el(i),color=this.state.bottles[from].top;this.state.move(from,i);this.busy=true;this.lastHint=null;this.save();this.sound.play('pour');this.sound.vibrate(20);
-    try{await this.anim.pour(fromEl,toEl,color)}catch(e){console.warn('Pour animation failed',e)}finally{this.busy=false;this.renderer.render(this.state);this.save();this.checkWin()}
+    const fromEl=this.renderer.el(from),toEl=this.renderer.el(i),src=this.state.bottles[from],dst=this.state.bottles[i],color=src.top,n=Math.min(src.run,dst.free),fromLen=src.length,toLen=dst.length;this.state.move(from,i);this.busy=true;this.lastHint=null;this.save();this.sound.play('pour');this.sound.vibrate(20);
+    try{await this.anim.pour(fromEl,toEl,color,n,fromLen,toLen)}catch(e){console.warn('Pour animation failed',e)}finally{this.busy=false;this.renderer.render(this.state);this.save();this.checkWin()}
   }
   undo(){if(this.busy)return;if(!this.state.undo()){this.renderer.toast('戻れる手がありません');return}this.cancelClear();this.sound.play('select');this.renderer.render(this.state);this.save()}
   restart(){if(this.busy)return;const restart=()=>{this.cancelClear();this.state.restart();this.sound.play('select');this.renderer.render(this.state);this.anim.stageEnter();this.lastTick=Date.now();this.save()};if(this.state.moves||this.state.hintsUsed||this.state.extraUsed){this.ask('このステージをやり直す？','手数と盤面を最初に戻します。追加ビンは消え、購入に使ったコインは返却されません。',restart)}else restart()}
